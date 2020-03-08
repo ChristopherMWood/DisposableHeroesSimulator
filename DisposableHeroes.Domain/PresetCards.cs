@@ -6,11 +6,13 @@ namespace DisposableHeroes.Domain
 {
     public static class PresetCards
     {
+        private static int TotalBodyCards = 62;
+
         public static List<HeadCard> AllHeadCards()
         {
             var cards = new List<HeadCard>();
 
-            for (var i = 0; i < 62; i++)
+            for (var i = 0; i < TotalBodyCards; i++)
             {
                 if (i < 26)
                 {
@@ -37,7 +39,7 @@ namespace DisposableHeroes.Domain
         {
             var cards = new List<ArmsCard>();
 
-            for (var i = 0; i < 62; i++)
+            for (var i = 0; i < TotalBodyCards; i++)
             {
                 if (i < 26)
                 {
@@ -64,7 +66,7 @@ namespace DisposableHeroes.Domain
         {
             var cards = new List<LegsCard>();
 
-            for (var i = 0; i < 62; i++)
+            for (var i = 0; i < TotalBodyCards; i++)
             {
                 if (i < 26)
                 {
@@ -91,7 +93,7 @@ namespace DisposableHeroes.Domain
         {
             var cards = new List<TorsoCard>();
 
-            for (var i = 0; i < 62; i++)
+            for (var i = 0; i < TotalBodyCards; i++)
             {
                 if (i < 26)
                 {
@@ -116,10 +118,29 @@ namespace DisposableHeroes.Domain
 
         public static List<WeaponCard> AllWeaponCards()
         {
-            return new List<WeaponCard>()
+            var cards = new List<WeaponCard>();
+
+            for (var i = 0; i < 54; i++)
             {
-                new WeaponCard("", 1)
-            };
+                if (i < 16)
+                {
+                    cards.Add(new WeaponCard("First Tier", 1));
+                }
+                else if (i < 32)
+                {
+                    cards.Add(new WeaponCard("Second Tier", 2));
+                }
+                else if (i < 46)
+                {
+                    cards.Add(new WeaponCard("Third Tier", 3));
+                }
+                else
+                {
+                    cards.Add(new WeaponCard("Fourth Tier", 4));
+                }
+            }
+
+            return cards;
         }
 
         public static List<SpecialCard> AllSpecialCards()

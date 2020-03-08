@@ -236,6 +236,10 @@ namespace DisposableHeroes.Gameplay
                 if (attackingPlayerRoll > defendingPlayerRoll)
                 {
                     var attackDamage = new TwoSixSidedDice().Roll();
+
+                    if (attackingPlayer.Weapon != null)
+                        attackDamage += attackingPlayer.Weapon.Damage;
+
                     defendingPlayer.Health -= attackDamage;
                     break;
                 }
