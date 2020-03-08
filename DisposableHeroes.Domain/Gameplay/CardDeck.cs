@@ -15,7 +15,10 @@ namespace DisposableHeroes.Domain.Gameplay
 
         public T Draw()
         {
-            return deck.Pop();
+            if (deck.Count > 0)
+                return deck.Pop();
+
+            return default;
         }
 
         public void AddToDeck(T card)

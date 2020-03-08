@@ -1,6 +1,6 @@
 ﻿namespace DisposableHeroes.Domain
 {
-    public class BuildPhaseEnums
+    public static class PhaseActions
     {
         public enum BuildPhaseActions
         { 
@@ -13,6 +13,20 @@
             EquiptCard,
             StoreCardInBackpack,
             DiscardCard
+        }
+
+
+        public enum PreparePhaseEnums
+        {
+
+        }
+
+        public enum AttackPhaseActions
+        {
+            StrengthAttack,
+            PerceptionAttack,
+            Heal,
+            RollForCard
         }
     }
 }

@@ -5,7 +5,7 @@ using DisposableHeroes.Domain.Players.Strategies;
 using DisposableHeroes.Gameplay;
 using System;
 using System.Collections.Generic;
-using static DisposableHeroes.Domain.BuildPhaseEnums;
+using static DisposableHeroes.Domain.PhaseActions;
 
 namespace DisposableHeroes.Domain.Players
 {
@@ -153,7 +153,7 @@ namespace DisposableHeroes.Domain.Players
         public BuildPhaseActions EvaluateBuildPhaseAction(IEnumerable<BuildPhaseActions> availableActions, Game game)
         {
             var chosenAction = Strategy.EvaluateBuildPhaseAction(availableActions, this, game);
-            Console.WriteLine(Name + ": " + chosenAction.ToString());
+            //Console.WriteLine(Name + ": " + chosenAction.ToString());
             //LOG PLAYER ACTION HERE IN HISTORY
             return chosenAction;
         }
@@ -161,7 +161,15 @@ namespace DisposableHeroes.Domain.Players
         public BuildPhaseActions EvaluateBuildPhaseDrawnCardAction(IEnumerable<BuildPhaseActions> availableActions, Game game, ICard card)
         {
             var chosenAction = Strategy.EvaluateBuildPhaseDrawnCardAction(availableActions, this, game, card);
-            Console.WriteLine(Name + ": " + chosenAction.ToString());
+            //Console.WriteLine(Name + ": " + chosenAction.ToString());
+            //LOG PLAYER ACTION HERE IN HISTORY
+            return chosenAction;
+        }
+
+        public AttackPhaseActions EvaluateAttackPhaseAction(IEnumerable<AttackPhaseActions> availableActions, Game game)
+        {
+            var chosenAction = Strategy.EvaluateAttackPhaseAction(availableActions, this, game);
+            //Console.WriteLine(Name + ": " + chosenAction.ToString());
             //LOG PLAYER ACTION HERE IN HISTORY
             return chosenAction;
         }
