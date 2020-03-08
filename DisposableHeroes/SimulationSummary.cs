@@ -5,7 +5,7 @@ namespace DisposableHeroes
     public class SimulationSummary
     {
         public int NumberOfSimulations;
-        public Dictionary<string, int> StrategiesUsed = new Dictionary<string, int>();
+        public SortedDictionary<string, double> StrategiesUsed = new SortedDictionary<string, double>();
         public double TotalRounds;
         public double TotalHealth;
         public double TotalStrength;

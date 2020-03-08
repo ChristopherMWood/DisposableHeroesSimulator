@@ -54,8 +54,8 @@ namespace DisposableHeroes
 
             foreach (var strategy in simulationSummary.StrategiesUsed)
             {
-                var percentage = (strategy.Value / simulationSummary.NumberOfSimulations) * 100;
-                Console.WriteLine("Strategy - " + strategy.Key + ": " + percentage + "%");
+                var percentage = (strategy.Value / (double)simulationSummary.NumberOfSimulations) * 100;
+                Console.WriteLine(strategy.Key + ": " + percentage + "%");
             }
 
             Console.WriteLine("\n----------------------------------------");
@@ -67,12 +67,9 @@ namespace DisposableHeroes
         {
             var players = new List<BasePlayer>()
             {
-                new BasePlayer("Player One", new PrimitiveStrategy()),
-                new BasePlayer("Player Two", new PrimitiveStrategy()),
-                new BasePlayer("Player Three", new PrimitiveStrategy()),
-                new BasePlayer("Player Four", new PrimitiveStrategy()),
-                new BasePlayer("Player Five", new PrimitiveStrategy()),
-                new BasePlayer("Player Six", new PrimitiveStrategy())
+                new BasePlayer("Player One", new StrengthStrategy()),
+                new BasePlayer("Player Two", new HealerStrategy()),
+                new BasePlayer("Player Three", new PrimitiveStrategy())
             };
 
             var game = new Game(players);
