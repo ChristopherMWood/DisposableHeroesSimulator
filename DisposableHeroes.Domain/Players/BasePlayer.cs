@@ -24,7 +24,6 @@ namespace DisposableHeroes.Domain.Players
         public BasePlayer(string name, IPlayerStrategy strategy)
         {
             Name = name;
-            Health = 25;
             Strategy = strategy;
         }
 

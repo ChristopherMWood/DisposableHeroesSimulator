@@ -13,22 +13,27 @@ namespace DisposableHeroes
     {
         public static void Main()
         {
-            var gamesToSimulate = 1000;
+            var gamesToSimulate = 10000;
             var gameSummaries = new List<GameSummary>();
 
             for (int i = 0; i < gamesToSimulate; i++)
             {
                 gameSummaries.Add(PlayGame());
-                Console.WriteLine("Games Simulated: " + i + "/" + gamesToSimulate);
+                
+                if (i % 10000 == 0)
+                    Console.WriteLine("Games Simulated: " + i + "/" + gamesToSimulate);
             }
 
             var totalRounds = 0;
+            var totalHealth = 0;
             foreach (var summary in gameSummaries)
             {
                 totalRounds += summary.NumberOfRounds;
+                totalHealth += summary.WinningHealth;
             }
 
-            Console.WriteLine("Average Rounds: " + totalRounds/gameSummaries.Count);
+            Console.WriteLine("Average Rounds: " + totalRounds / gameSummaries.Count);
+            Console.WriteLine("Average Ending Health: " + totalHealth / gameSummaries.Count);
             Console.ReadLine();
         }
 
@@ -86,6 +91,7 @@ namespace DisposableHeroes
             return new GameSummary()
             {
                 WinnerName = winner.Name,
+                WinningHealth = winner.Health,
                 WinningPlayerStrength = winner.Strength,
                 WinningPlayerAgility = winner.Agility,
                 WinningPlayerPerception = winner.Perception,
