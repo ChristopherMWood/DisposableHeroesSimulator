@@ -22,5 +22,10 @@ namespace DisposableHeroes.Domain.Players.Strategies
         {
             return availableActions.First();
         }
+
+        public override string ToString()
+        {
+            return "Primitive Strategy";
+        }
     }
 }

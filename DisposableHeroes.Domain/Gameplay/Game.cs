@@ -40,6 +40,21 @@ namespace DisposableHeroes.Gameplay
             CurrentPlayer = player;
         }
 
+        public BasePlayer SetStartingPlayerAsOneWithLowestHealth()
+        {
+            var startingPlayer = Players.First();
+
+            foreach (var player in Players)
+            {
+                if (player.Health < startingPlayer.Health)
+                {
+                    startingPlayer = player;
+                }
+            }
+
+            return startingPlayer;
+        }
+
         public void PlayBuildRound()
         {
             var startingPlayerNode = Players.Find(CurrentPlayer);

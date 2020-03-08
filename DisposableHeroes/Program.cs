@@ -6,6 +6,7 @@ using DisposableHeroes.Gameplay;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DisposableHeroes
 {
@@ -13,31 +14,56 @@ namespace DisposableHeroes
     {
         public static void Main()
         {
-            var gamesToSimulate = 10000;
-            var gameSummaries = new List<GameSummary>();
+            var simulationProgressRate = 10;
+            var simulationSummary = new SimulationSummary() 
+            { 
+                NumberOfSimulations = 10000
+            };
 
-            for (int i = 0; i < gamesToSimulate; i++)
+            Console.WriteLine("Simulating " + simulationSummary.NumberOfSimulations + " games");
+
+            for (int i = 0; i < simulationSummary.NumberOfSimulations; i++)
             {
-                gameSummaries.Add(PlayGame());
-                
-                if (i % 10000 == 0)
-                    Console.WriteLine("Games Simulated: " + i + "/" + gamesToSimulate);
+                var gameSummary = PlayGame().Result;
+                simulationSummary.TotalRounds += gameSummary.RoundsInGame;
+                simulationSummary.TotalHealth += gameSummary.WinningPlayer.Health;
+                simulationSummary.TotalStrength += gameSummary.WinningPlayer.Strength;
+                simulationSummary.TotalAgility += gameSummary.WinningPlayer.Agility;
+                simulationSummary.TotalPerception += gameSummary.WinningPlayer.Perception;
+
+                var winningStrategy = gameSummary.WinningPlayer.Strategy.ToString();
+
+                if (simulationSummary.StrategiesUsed.ContainsKey(winningStrategy))
+                    simulationSummary.StrategiesUsed[winningStrategy] += 1;
+                else
+                    simulationSummary.StrategiesUsed[winningStrategy] = 1;
+
+                if (i % (simulationSummary.NumberOfSimulations / simulationProgressRate) == 0)
+                    Console.WriteLine("- " + i + "/" + simulationSummary.NumberOfSimulations);
             }
 
-            var totalRounds = 0;
-            var totalHealth = 0;
-            foreach (var summary in gameSummaries)
+            Console.WriteLine("\n---------- Overall Game Averages ----------");
+            Console.WriteLine("Average Rounds: " + simulationSummary.TotalRounds / simulationSummary.NumberOfSimulations);
+            Console.WriteLine("\n---------- Player Stat Averages ----------");
+            Console.WriteLine("Average Health: " + simulationSummary.TotalHealth / simulationSummary.NumberOfSimulations);
+            Console.WriteLine("Average Strength: " + simulationSummary.TotalStrength / simulationSummary.NumberOfSimulations);
+            Console.WriteLine("Average Agility: " + simulationSummary.TotalAgility / simulationSummary.NumberOfSimulations);
+            Console.WriteLine("Average Perception: " + simulationSummary.TotalPerception / simulationSummary.NumberOfSimulations);
+
+            Console.WriteLine("\n---------- Strategy Win Rate ----------");
+
+            foreach (var strategy in simulationSummary.StrategiesUsed)
             {
-                totalRounds += summary.NumberOfRounds;
-                totalHealth += summary.WinningHealth;
+                var percentage = (strategy.Value / simulationSummary.NumberOfSimulations) * 100;
+                Console.WriteLine("Strategy - " + strategy.Key + ": " + percentage + "%");
             }
 
-            Console.WriteLine("Average Rounds: " + totalRounds / gameSummaries.Count);
-            Console.WriteLine("Average Ending Health: " + totalHealth / gameSummaries.Count);
+            Console.WriteLine("\n----------------------------------------");
+
             Console.ReadLine();
         }
 
-        public static GameSummary PlayGame()
+        public static async Task<GameSummary> PlayGame()
         {
             var players = new List<BasePlayer>()
             {
@@ -51,12 +77,12 @@ namespace DisposableHeroes
 
             var game = new Game(players);
 
-            game.HeadsDeck.AddToDeck(PresetCards.AllHeadCards);
-            game.ArmsDeck.AddToDeck(PresetCards.AllArmsCards);
-            game.LegsDeck.AddToDeck(PresetCards.AllLegsCards);
-            game.TorsosDeck.AddToDeck(PresetCards.AllTorsoCards);
-            game.WeaponsDeck.AddToDeck(PresetCards.AllWeaponCards);
-            game.SpecialsDeck.AddToDeck(PresetCards.AllSpecialCards);
+            game.HeadsDeck.AddToDeck(PresetCards.AllHeadCards());
+            game.ArmsDeck.AddToDeck(PresetCards.AllArmsCards());
+            game.LegsDeck.AddToDeck(PresetCards.AllLegsCards());
+            game.TorsosDeck.AddToDeck(PresetCards.AllTorsoCards());
+            game.WeaponsDeck.AddToDeck(PresetCards.AllWeaponCards());
+            game.SpecialsDeck.AddToDeck(PresetCards.AllSpecialCards());
             game.SetStartingPlayer(players[0]);
 
             var round = 1;
@@ -73,45 +99,19 @@ namespace DisposableHeroes
                 game.PlayPrepareRound();
                 game.PlayAttackRound();
 
-                var startingPlayer = GetStartingPlayer(game);
+                var startingPlayer = game.SetStartingPlayerAsOneWithLowestHealth();
                 game.SetStartingPlayer(startingPlayer);
 
                 round++;
             }
 
             var winner = game.Players.First();
-            //Console.WriteLine("\n----------------------------------");
-            //Console.WriteLine("Winner: " + winner.Name);
-            //Console.WriteLine("Health: " + winner.Health);
-            //Console.WriteLine("Strength: " + winner.Strength);
-            //Console.WriteLine("Agility: " + winner.Agility);
-            //Console.WriteLine("Perception: " + winner.Perception);
-            //Console.WriteLine("Total # of Rounds: " + round);
 
             return new GameSummary()
             {
-                WinnerName = winner.Name,
-                WinningHealth = winner.Health,
-                WinningPlayerStrength = winner.Strength,
-                WinningPlayerAgility = winner.Agility,
-                WinningPlayerPerception = winner.Perception,
-                NumberOfRounds = round
+                WinningPlayer = winner,
+                RoundsInGame = round
             };
-        }
-
-        public static BasePlayer GetStartingPlayer(Game game)
-        {
-            var startingPlayer = game.Players.First();
-
-            foreach (var player in game.Players)
-            {
-                if (player.Health < startingPlayer.Health)
-                {
-                    startingPlayer = player;
-                }
-            }
-
-            return startingPlayer;
         }
     }
 }
