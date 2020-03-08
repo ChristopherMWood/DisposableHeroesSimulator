@@ -18,6 +18,11 @@ namespace DisposableHeroes.Domain.Gameplay
             return deck.Pop();
         }
 
+        public void AddToDeck(T card)
+        {
+            deck.Push(card);
+        }
+
         public void AddToDeck(IEnumerable<T> cards)
         {
             foreach (var card in cards)

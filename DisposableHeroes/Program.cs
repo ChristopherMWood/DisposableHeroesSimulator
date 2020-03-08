@@ -1,6 +1,9 @@
 ﻿using DisposableHeroes.Domain;
+using DisposableHeroes.Domain.Dice;
 using DisposableHeroes.Domain.Players;
+using DisposableHeroes.Domain.Players.Strategies;
 using DisposableHeroes.Gameplay;
+using System;
 using System.Collections.Generic;
 
 namespace DisposableHeroes
@@ -11,12 +14,12 @@ namespace DisposableHeroes
         {
             var players = new List<BasePlayer>()
             {
-                new BasePlayer("Player One"),
-                new BasePlayer("Player Two"),
-                new BasePlayer("Player Three"),
-                new BasePlayer("Player Four"),
-                new BasePlayer("Player Five"),
-                new BasePlayer("Player Six")
+                new BasePlayer("Player One", new PrimitiveStrategy()),
+                new BasePlayer("Player Two", new PrimitiveStrategy()),
+                new BasePlayer("Player Three", new PrimitiveStrategy()),
+                new BasePlayer("Player Four", new PrimitiveStrategy()),
+                new BasePlayer("Player Five", new PrimitiveStrategy()),
+                new BasePlayer("Player Six", new PrimitiveStrategy())
             };
 
             var game = new Game(players);
@@ -27,7 +30,11 @@ namespace DisposableHeroes
             game.TorsosDeck.AddToDeck(PresetCards.AllTorsoCards);
             game.WeaponsDeck.AddToDeck(PresetCards.AllWeaponCards);
             game.SpecialsDeck.AddToDeck(PresetCards.AllSpecialCards);
-            game.CurrentPlayer = players[0];
+            game.SetStartingPlayer(players[0]);
+
+            game.PlayBuildRound();
+
+            Console.ReadLine();
         }
     }
 }
