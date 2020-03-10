@@ -1,12 +1,8 @@
-﻿using DisposableHeroes.Domain;
+﻿using DisposableHeroes.Domain.Gameplay;
 using DisposableHeroes.Domain.Players;
 using DisposableHeroes.Domain.Players.Strategies;
-using DisposableHeroes.Domain.Stats;
-using DisposableHeroes.Gameplay;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DisposableHeroes
 {
@@ -14,34 +10,56 @@ namespace DisposableHeroes
     {
         public static void Main()
         {
-            var simulationProgressRate = 10;
-            var simulationSummary = new SimulationSummary() 
-            { 
-                NumberOfSimulations = 10000
-            };
+            var summary = new SimulationSummary();
+            var simulationsToRun = 10000;
+            var successfulRuns = 0;
 
-            Console.WriteLine("Simulating " + simulationSummary.NumberOfSimulations + " games");
+            Console.WriteLine($"Simulating {simulationsToRun} games");
 
-            for (int i = 0; i < simulationSummary.NumberOfSimulations; i++)
+            for (var i = 1; i <= simulationsToRun; i++)
             {
-                var gameSummary = PlayGame().Result;
-                simulationSummary.TotalRounds += gameSummary.RoundsInGame;
-                simulationSummary.TotalHealth += gameSummary.WinningPlayer.Health;
-                simulationSummary.TotalStrength += gameSummary.WinningPlayer.Strength;
-                simulationSummary.TotalAgility += gameSummary.WinningPlayer.Agility;
-                simulationSummary.TotalPerception += gameSummary.WinningPlayer.Perception;
+                var players = new List<BasePlayer>()
+                {
+                    new BasePlayer("Player 1", new StrengthStrategy()),
+                    new BasePlayer("Player 2", new HealerStrategy()),
+                    new BasePlayer("Player 3", new PrimitiveStrategy())
+                };
+                var gameSummary = GameSimulator.SimulateGame(players, players[0]);
 
-                var winningStrategy = gameSummary.WinningPlayer.Strategy.ToString();
+                if (gameSummary == null)
+                    continue;
 
-                if (simulationSummary.StrategiesUsed.ContainsKey(winningStrategy))
-                    simulationSummary.StrategiesUsed[winningStrategy] += 1;
-                else
-                    simulationSummary.StrategiesUsed[winningStrategy] = 1;
+                summary.TotalRounds += gameSummary.RoundsInGame;
+                summary.TotalHealth += gameSummary.WinningPlayer.Health;
+                summary.TotalStrength += gameSummary.WinningPlayer.Strength;
+                summary.TotalAgility += gameSummary.WinningPlayer.Agility;
+                summary.TotalPerception += gameSummary.WinningPlayer.Perception;
+                summary.TotalWeaponDamage += gameSummary.WinningPlayer.Weapon != null ? gameSummary.WinningPlayer.Weapon.Damage : 0;
+                TrackStringOccurence(summary.StrategiesUsed, gameSummary.WinningPlayer.Strategy.ToString());
+                TrackStringOccurence(summary.PlayerWinsByName, gameSummary.WinningPlayer.Name);
+                successfulRuns++;
 
-                if (i % (simulationSummary.NumberOfSimulations / simulationProgressRate) == 0)
-                    Console.WriteLine("- " + i + "/" + simulationSummary.NumberOfSimulations);
+                if (i % (simulationsToRun / 10) == 0)
+                    Console.WriteLine($"- {i}/{successfulRuns}");
             }
 
+            Console.WriteLine($"Number of Failed Simulations: {simulationsToRun - successfulRuns}");
+
+            summary.NumberOfSimulations = successfulRuns;
+            PrintSimulationSummary(summary);
+            Console.ReadLine();
+        }
+
+        private static void TrackStringOccurence(SortedDictionary<string, double> dictionary, string text)
+        {
+            if (dictionary.ContainsKey(text))
+                dictionary[text]++;
+            else
+                dictionary[text] = 1;
+        }
+
+        private static void PrintSimulationSummary(SimulationSummary simulationSummary)
+        {
             Console.WriteLine("\n---------- Overall Game Averages ----------");
             Console.WriteLine("Average Rounds: " + simulationSummary.TotalRounds / simulationSummary.NumberOfSimulations);
             Console.WriteLine("\n---------- Player Stat Averages ----------");
@@ -49,66 +67,25 @@ namespace DisposableHeroes
             Console.WriteLine("Average Strength: " + simulationSummary.TotalStrength / simulationSummary.NumberOfSimulations);
             Console.WriteLine("Average Agility: " + simulationSummary.TotalAgility / simulationSummary.NumberOfSimulations);
             Console.WriteLine("Average Perception: " + simulationSummary.TotalPerception / simulationSummary.NumberOfSimulations);
+            Console.WriteLine("Average Weapon Damage: " + simulationSummary.TotalWeaponDamage / simulationSummary.NumberOfSimulations);
 
             Console.WriteLine("\n---------- Strategy Win Rate ----------");
 
             foreach (var strategy in simulationSummary.StrategiesUsed)
             {
-                var percentage = (strategy.Value / (double)simulationSummary.NumberOfSimulations) * 100;
+                var percentage = (strategy.Value / simulationSummary.NumberOfSimulations) * 100;
                 Console.WriteLine(strategy.Key + ": " + percentage + "%");
             }
 
-            Console.WriteLine("\n----------------------------------------");
+            Console.WriteLine("\n---------- Player Win Rate ----------");
 
-            Console.ReadLine();
-        }
-
-        public static async Task<GameSummary> PlayGame()
-        {
-            var players = new List<BasePlayer>()
+            foreach (var playerName in simulationSummary.PlayerWinsByName)
             {
-                new BasePlayer("Player One", new StrengthStrategy()),
-                new BasePlayer("Player Two", new HealerStrategy()),
-                new BasePlayer("Player Three", new PrimitiveStrategy())
-            };
-
-            var game = new Game(players);
-
-            game.HeadsDeck.AddToDeck(PresetCards.AllHeadCards());
-            game.ArmsDeck.AddToDeck(PresetCards.AllArmsCards());
-            game.LegsDeck.AddToDeck(PresetCards.AllLegsCards());
-            game.TorsosDeck.AddToDeck(PresetCards.AllTorsoCards());
-            game.WeaponsDeck.AddToDeck(PresetCards.AllWeaponCards());
-            game.SpecialsDeck.AddToDeck(PresetCards.AllSpecialCards());
-            game.SetStartingPlayer(players[0]);
-
-            var round = 1;
-
-            while (game.Players.Count > 1)
-            {
-                if (round > 100)
-                {
-                    Console.WriteLine("GAME ENDED PREMATURELY (Infinite Game Loop Detected)");
-                    break;
-                }
-
-                game.PlayBuildRound();
-                game.PlayPrepareRound();
-                game.PlayAttackRound();
-
-                var startingPlayer = game.SetStartingPlayerAsOneWithLowestHealth();
-                game.SetStartingPlayer(startingPlayer);
-
-                round++;
+                var percentage = (playerName.Value / simulationSummary.NumberOfSimulations) * 100;
+                Console.WriteLine(playerName.Key + ": " + percentage + "%");
             }
 
-            var winner = game.Players.First();
-
-            return new GameSummary()
-            {
-                WinningPlayer = winner,
-                RoundsInGame = round
-            };
+            Console.WriteLine("\n----------------------------------------");
         }
     }
 }

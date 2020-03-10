@@ -40,7 +40,7 @@ namespace DisposableHeroes.Gameplay
             CurrentPlayer = player;
         }
 
-        public BasePlayer SetStartingPlayerAsOneWithLowestHealth()
+        public void SetStartingPlayerAsOneWithLowestHealth()
         {
             var startingPlayer = Players.First();
 
@@ -52,7 +52,7 @@ namespace DisposableHeroes.Gameplay
                 }
             }
 
-            return startingPlayer;
+            SetStartingPlayer(startingPlayer);
         }
 
         public void PlayBuildRound()
@@ -250,7 +250,7 @@ namespace DisposableHeroes.Gameplay
             }
         }
 
-        public int RollDiceForSkill(int skillLevel)
+        private static int RollDiceForSkill(int skillLevel)
         {
             if (skillLevel < 4)
             {
