@@ -123,6 +123,7 @@ namespace DisposableHeroes.Domain.Players
             {
                 previouslyEquiptCard = Torso;
                 Torso = card as TorsoCard;
+                Health += Torso.HealthBoost;
             }
             else if (card is ArmsCard)
             {

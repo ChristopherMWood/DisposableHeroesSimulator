@@ -97,19 +97,19 @@ namespace DisposableHeroes.Domain
             {
                 if (i < 26)
                 {
-                    cards.Add(new TorsoCard("First Tier", 0, 0, 0));
+                    cards.Add(new TorsoCard("First Tier", 0, 0, 0, 1));
                 }
                 else if (i < 44)
                 {
-                    cards.Add(new TorsoCard("Second Tier", 0, 0, 0));
+                    cards.Add(new TorsoCard("Second Tier", 0, 0, 0, 1));
                 }
                 else if (i < 54)
                 {
-                    cards.Add(new TorsoCard("Third Tier", 0, 0, 0));
+                    cards.Add(new TorsoCard("Third Tier", 0, 0, 0, 1));
                 }
                 else
                 {
-                    cards.Add(new TorsoCard("Fourth Tier", 0, 0, 0));
+                    cards.Add(new TorsoCard("Fourth Tier", 0, 0, 0, 1));
                 }
             }
 

@@ -47,6 +47,52 @@ namespace DisposableHeroes.Gameplay
             CurrentPlayer = player;
         }
 
+        public void GiveAllPlayersSpecialCard()
+        {
+            DoActionForAllPlayersInOrder((player) =>
+            {
+                player.Backpack.Cards.Add(SpecialsDeck.Draw());
+            });
+        }
+
+        public void PlayBuildRound()
+        {
+            DoActionForAllPlayersInOrder((player) =>
+            {
+                var action = ResolveDrawCardForPlayer(player);
+                PerformDrawCardActionPhaseAction(action, player);
+            });
+        }
+
+        public void PlayPrepareRound()
+        {
+            DoActionForAllPlayersInOrder((player) =>
+            {
+
+            });
+        }
+
+        public void PlayAttackRound()
+        {
+            DoActionForAllPlayersInOrder((player) =>
+            {
+                if (Players.Where(p => p.Health > 0).Count() > 1)
+                {
+                    var availablePlayerOptions = new List<AttackPhaseActions>()
+                    {
+                        AttackPhaseActions.StrengthAttack,
+                        AttackPhaseActions.PerceptionAttack,
+                        AttackPhaseActions.Heal,
+                        AttackPhaseActions.RollForCard
+                    };
+
+                    var action = player.EvaluateAttackPhaseAction(availablePlayerOptions, this);
+                    PerformAttackPhaseAction(action, player);
+                }
+            });
+
+            RemoveDeadPlayers();
+        }
         public void SetStartingPlayerAsOneWithLowestHealth()
         {
             var startingPlayer = Players.First();
@@ -62,23 +108,7 @@ namespace DisposableHeroes.Gameplay
             SetStartingPlayer(startingPlayer);
         }
 
-        public void GiveAllPlayersSpecialCard()
-        {
-            DoActionForAllPlayersInOrder((player) =>
-            {
-                player.Backpack.Cards.Add(SpecialsDeck.Draw());
-            });
-        }
-
-        public void PlayBuildRound()
-        {
-            DoActionForAllPlayersInOrder((player) =>
-            {
-                ResolveDrawCardForPlayer(player);
-            });
-        }
-
-        public void ResolveDrawCardForPlayer(BasePlayer player)
+        private BuildPhaseActions ResolveDrawCardForPlayer(BasePlayer player)
         {
             var availablePlayerOptions = new List<BuildPhaseActions>();
             var diceRoll = new SixSidedDice().Roll();
@@ -99,8 +129,7 @@ namespace DisposableHeroes.Gameplay
                 availablePlayerOptions.Add(BuildPhaseActions.DrawSpecialCard);
             }
 
-            var action = player.EvaluateBuildPhaseAction(availablePlayerOptions, this);
-            PerformDrawCardActionPhaseAction(action, player);
+            return player.EvaluateBuildPhaseAction(availablePlayerOptions, this);
         }
 
         public void PerformDrawCardActionPhaseAction(BuildPhaseActions action, BasePlayer player)
@@ -149,39 +178,17 @@ namespace DisposableHeroes.Gameplay
             }
             else if (drawAction == BuildPhaseActions.StoreCardInBackpack)
             {
-                player.Backpack.StoreInBackpack(card);
+                if (!player.Backpack.StoreInBackpack(card)) {
+                    ICard randCard = player.Backpack.Cards[GameRandomGenerator.Next(0, player.Backpack.Cards.Count)];
+                    player.Backpack.RemoveFromBackpack(randCard);
+                    player.Backpack.StoreInBackpack(card);
+                }
+                // TODO: If StoreInBackpack fails, descarding a random card and try again. Might need to change it to a helper method.
             }
             else if (drawAction == BuildPhaseActions.DiscardCard)
             {
                 DiscardDeck.AddToDeck(card);
             }
-        }
-
-        public void PlayPrepareRound()
-        { 
-        
-        }
-
-        public void PlayAttackRound()
-        {
-            DoActionForAllPlayersInOrder((player) =>
-            {
-                if (Players.Where(p => p.Health > 0).Count() > 1)
-                {
-                    var availablePlayerOptions = new List<AttackPhaseActions>()
-                    {
-                        AttackPhaseActions.StrengthAttack,
-                        AttackPhaseActions.PerceptionAttack,
-                        AttackPhaseActions.Heal,
-                        AttackPhaseActions.RollForCard
-                    };
-
-                    var action = player.EvaluateAttackPhaseAction(availablePlayerOptions, this);
-                    PerformAttackPhaseAction(action, player);
-                }
-            });
-
-            RemoveDeadPlayers();
         }
 
         private void RemoveDeadPlayers()
@@ -210,7 +217,8 @@ namespace DisposableHeroes.Gameplay
                     player.Health += 4;
                     break;
                 case AttackPhaseActions.RollForCard:
-                    ResolveDrawCardForPlayer(player);
+                     var drawCardAction = ResolveDrawCardForPlayer(player);
+                    PerformDrawCardActionPhaseAction(drawCardAction, player); //TODO: Needs to be replaced with simpler call
                     break;
             }
         }
