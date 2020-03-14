@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using DisposableHeroes.Domain.Constants;
 
 namespace DisposableHeroes.Domain.Player
 {
@@ -11,7 +12,7 @@ namespace DisposableHeroes.Domain.Player
 
         public bool StoreInBackpack(ICard card)
         {
-            if (Cards.Count() < 3)
+            if (Cards.Count() < PlayerConstants.MaxBackpackCapacity)
             {
                 Cards.Add(card);
                 return true;

@@ -6,6 +6,7 @@ using DisposableHeroes.Domain.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DisposableHeroes.Domain.Constants;
 using static DisposableHeroes.Domain.PhaseActions;
 
 namespace DisposableHeroes.Gameplay
@@ -76,7 +77,8 @@ namespace DisposableHeroes.Gameplay
         {
             DoActionForAllPlayersInOrder((player) =>
             {
-                if (Players.Where(p => p.Health > 0).Count() > 1)
+                // !!!: Might be able to reduce the condition in `if'
+                if (Players.Count(p => p.Health > 0) > 1)
                 {
                     var availablePlayerOptions = new List<AttackPhaseActions>()
                     {
@@ -97,12 +99,9 @@ namespace DisposableHeroes.Gameplay
         {
             var startingPlayer = Players.First();
 
-            foreach (var player in Players)
+            foreach (var player in Players.Where(player => player.Health < startingPlayer.Health))
             {
-                if (player.Health < startingPlayer.Health)
-                {
-                    startingPlayer = player;
-                }
+                startingPlayer = player;
             }
 
             SetStartingPlayer(startingPlayer);
@@ -214,7 +213,7 @@ namespace DisposableHeroes.Gameplay
 
                     break;
                 case AttackPhaseActions.Heal:
-                    player.Health += 4;
+                    player.Health += GameConstants.HealingDuringAttack;
                     break;
                 case AttackPhaseActions.RollForCard:
                      var drawCardAction = ResolveDrawCardForPlayer(player);
@@ -275,6 +274,11 @@ namespace DisposableHeroes.Gameplay
         {
             var startingPlayerNode = Players.Find(CurrentPlayer);
             var currentPlayerNode = startingPlayerNode;
+            if (currentPlayerNode == null)
+            {
+                return;
+            }
+
             var nextPlayerNode = currentPlayerNode.Next;
 
             do

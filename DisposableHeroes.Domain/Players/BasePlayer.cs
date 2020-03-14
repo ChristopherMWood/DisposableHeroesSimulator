@@ -4,6 +4,7 @@ using DisposableHeroes.Domain.Player;
 using DisposableHeroes.Domain.Players.Strategies;
 using DisposableHeroes.Gameplay;
 using System.Collections.Generic;
+using DisposableHeroes.Domain.Constants;
 using static DisposableHeroes.Domain.PhaseActions;
 
 namespace DisposableHeroes.Domain.Players
@@ -26,7 +27,7 @@ namespace DisposableHeroes.Domain.Players
             Strategy = strategy;
         }
 
-        private int health = 20;
+        private int health = PlayerConstants.InitialHealth;
         public int Health
         {
             get
@@ -35,8 +36,8 @@ namespace DisposableHeroes.Domain.Players
             }
             set
             {
-                if (value > 25)
-                    health = 25;
+                if (value > GameConstants.MaxHealth)
+                    health = GameConstants.MaxHealth;
                 else if (value < 0)
                     health = 0;
                 else
@@ -48,7 +49,7 @@ namespace DisposableHeroes.Domain.Players
         {
             get
             {
-                var total = 4;
+                var total = PlayerConstants.InitialStrength;
 
                 if (Head != null)
                     total += Head.Strength;
@@ -70,7 +71,7 @@ namespace DisposableHeroes.Domain.Players
         {
             get
             {
-                var total = 4;
+                var total = PlayerConstants.InitialAgility;
 
                 if (Head != null)
                     total += Head.Agility;
@@ -92,7 +93,7 @@ namespace DisposableHeroes.Domain.Players
         {
             get
             {
-                var total = 4;
+                var total = PlayerConstants.InitialPerception;
 
                 if (Head != null)
                     total += Head.Perception;
