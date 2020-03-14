@@ -11,7 +11,7 @@ namespace DisposableHeroes.Domain.Helpers
     {
         public static void Test()
         {
-            var x = GetCardsWhere(new List<ICard>(), );
+            //var x = GetCardsWhere(new List<ICard>(), );
         }
 
         //public IEnumerable<ICard> GetCardsWhere(IEnumerable<ICard> cards)
