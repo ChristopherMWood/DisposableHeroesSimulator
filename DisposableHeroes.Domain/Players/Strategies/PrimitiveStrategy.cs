@@ -13,7 +13,7 @@ namespace DisposableHeroes.Domain.Players.Strategies
             return availableActions.First();
         }
 
-        public BuildPhaseActions EvaluateBuildPhaseDrawnCardAction(IEnumerable<BuildPhaseActions> availableActions, BasePlayer player, Game game, ICard card)
+        public BuildPhaseActions EvaluateDrawnCardAction(IEnumerable<BuildPhaseActions> availableActions, BasePlayer player, Game game, ICard card)
         {
             return availableActions.First();
         }

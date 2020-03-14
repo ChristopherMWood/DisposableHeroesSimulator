@@ -3,6 +3,6 @@
     public enum GameState
     {
         InProgress,
-        Ended
+        GameEnded
     }
 }

@@ -12,6 +12,8 @@ namespace DisposableHeroes.Domain.Gameplay
         public static GameSummary SimulateGame(List<BasePlayer> players, BasePlayer startingPlayer)
         {
             var game = new Game(players);
+            var round = 0;
+
             game.SetStartingPlayer(startingPlayer);
 
             game.HeadsDeck.AddToDeck(PresetCards.AllHeadCards());
@@ -21,22 +23,27 @@ namespace DisposableHeroes.Domain.Gameplay
             game.WeaponsDeck.AddToDeck(PresetCards.AllWeaponCards());
             game.SpecialsDeck.AddToDeck(PresetCards.AllSpecialCards());
 
-            var round = 1;
-
-            while (game.Players.Count > 1)
+            while (game.State != GameState.GameEnded)
             {
+                round++;
+
                 if (round > 100)
                 {
                     Console.WriteLine("GAME ENDED PREMATURELY (Infinite Game Loop Detected)");
                     return null;
                 }
 
-                game.PlayBuildRound();
+                if (round == 1)
+                    game.GiveAllPlayersSpecialCard();
+
+                if (game.Players.Count > 2)
+                    game.PlayBuildRound();
+
                 game.PlayPrepareRound();
                 game.PlayAttackRound();
                 game.SetStartingPlayerAsOneWithLowestHealth();
 
-                round++;
+                game.CheckForGameOver();
             }
 
             return new GameSummary()

@@ -3,7 +3,6 @@ using DisposableHeroes.Domain.Cards.BodyParts;
 using DisposableHeroes.Domain.Player;
 using DisposableHeroes.Domain.Players.Strategies;
 using DisposableHeroes.Gameplay;
-using System;
 using System.Collections.Generic;
 using static DisposableHeroes.Domain.PhaseActions;
 
@@ -159,7 +158,7 @@ namespace DisposableHeroes.Domain.Players
 
         public BuildPhaseActions EvaluateBuildPhaseDrawnCardAction(IEnumerable<BuildPhaseActions> availableActions, Game game, ICard card)
         {
-            var chosenAction = Strategy.EvaluateBuildPhaseDrawnCardAction(availableActions, this, game, card);
+            var chosenAction = Strategy.EvaluateDrawnCardAction(availableActions, this, game, card);
             //Console.WriteLine(Name + ": " + chosenAction.ToString());
             //LOG PLAYER ACTION HERE IN HISTORY
             return chosenAction;

@@ -26,7 +26,7 @@ namespace DisposableHeroes.Domain.Players.Strategies
             return availableActions.First();
         }
 
-        public PhaseActions.BuildPhaseActions EvaluateBuildPhaseDrawnCardAction(IEnumerable<PhaseActions.BuildPhaseActions> availableActions, BasePlayer player, Game game, ICard card)
+        public PhaseActions.BuildPhaseActions EvaluateDrawnCardAction(IEnumerable<PhaseActions.BuildPhaseActions> availableActions, BasePlayer player, Game game, ICard card)
         {
             if (availableActions.Contains(PhaseActions.BuildPhaseActions.EquiptCard) && NewCardIsStrongerThanCurrent(player, card))
                 return PhaseActions.BuildPhaseActions.EquiptCard;

@@ -12,6 +12,7 @@ namespace DisposableHeroes.Gameplay
 {
     public class Game
     {
+        public GameState State { get; private set; } = GameState.InProgress;
         public LinkedList<BasePlayer> Players { get; } = new LinkedList<BasePlayer>();
         public LinkedList<BasePlayer> DeadPlayers { get; } = new LinkedList<BasePlayer>();
         public BasePlayer CurrentPlayer { get; private set; }
@@ -35,6 +36,12 @@ namespace DisposableHeroes.Gameplay
             }
         }
 
+        public void CheckForGameOver()
+        {
+            if (Players.Count() == 1)
+                State = GameState.GameEnded;
+        }
+
         public void SetStartingPlayer(BasePlayer player)
         {
             CurrentPlayer = player;
@@ -55,20 +62,20 @@ namespace DisposableHeroes.Gameplay
             SetStartingPlayer(startingPlayer);
         }
 
+        public void GiveAllPlayersSpecialCard()
+        {
+            DoActionForAllPlayersInOrder((player) =>
+            {
+                player.Backpack.Cards.Add(SpecialsDeck.Draw());
+            });
+        }
+
         public void PlayBuildRound()
         {
-            var startingPlayerNode = Players.Find(CurrentPlayer);
-            var currentPlayerNode = startingPlayerNode;
-            var nextPlayerNode = currentPlayerNode.Next;
-
-            do
+            DoActionForAllPlayersInOrder((player) =>
             {
-                var player = currentPlayerNode.Value;
                 ResolveDrawCardForPlayer(player);
-
-                currentPlayerNode = nextPlayerNode ?? Players.First;
-                nextPlayerNode = currentPlayerNode.Next;
-            } while (currentPlayerNode != startingPlayerNode);
+            });
         }
 
         public void ResolveDrawCardForPlayer(BasePlayer player)
@@ -106,35 +113,30 @@ namespace DisposableHeroes.Gameplay
             };
 
             ICard card = null;
-            BuildPhaseActions drawAction = BuildPhaseActions.DiscardCard;
 
             switch (action)
             {
                 case BuildPhaseActions.DrawHeadCard:
                     card = HeadsDeck.Draw();
-                    drawAction = player.EvaluateBuildPhaseDrawnCardAction(availablePlayerOptions, this, card);
                     break;
                 case BuildPhaseActions.DrawTorsoCard:
                     card = TorsosDeck.Draw();
-                    drawAction = player.EvaluateBuildPhaseDrawnCardAction(availablePlayerOptions, this, card);
                     break;
                 case BuildPhaseActions.DrawArmsCard:
                     card = ArmsDeck.Draw();
-                    drawAction = player.EvaluateBuildPhaseDrawnCardAction(availablePlayerOptions, this, card);
                     break;
                 case BuildPhaseActions.DrawLegsCard:
                     card = LegsDeck.Draw();
-                    drawAction = player.EvaluateBuildPhaseDrawnCardAction(availablePlayerOptions, this, card);
                     break;
                 case BuildPhaseActions.DrawWeaponCard:
                     card = WeaponsDeck.Draw();
-                    drawAction = player.EvaluateBuildPhaseDrawnCardAction(availablePlayerOptions, this, card);
                     break;
                 case BuildPhaseActions.DrawSpecialCard:
                     card = SpecialsDeck.Draw();
-                    drawAction = player.EvaluateBuildPhaseDrawnCardAction(availablePlayerOptions, this, card);
                     break;
             }
+
+            var drawAction = player.EvaluateBuildPhaseDrawnCardAction(availablePlayerOptions, this, card);
 
             if (drawAction == BuildPhaseActions.EquiptCard)
             {
@@ -162,34 +164,28 @@ namespace DisposableHeroes.Gameplay
 
         public void PlayAttackRound()
         {
-            var startingPlayerNode = Players.Find(CurrentPlayer);
-            var currentPlayerNode = startingPlayerNode;
-            var nextPlayerNode = currentPlayerNode.Next;
-            var availablePlayerOptions = new List<AttackPhaseActions>()
+            DoActionForAllPlayersInOrder((player) =>
             {
-                AttackPhaseActions.StrengthAttack,
-                AttackPhaseActions.PerceptionAttack,
-                AttackPhaseActions.Heal,
-                AttackPhaseActions.RollForCard
-            };
-
-            do
-            {
-                var player = currentPlayerNode.Value;
-
-                var action = player.EvaluateAttackPhaseAction(availablePlayerOptions, this);
-                PerformAttackPhaseAction(action, player);
-
-                if (Players.Where(p => p.Health > 0).Count() == 1)
+                if (Players.Where(p => p.Health > 0).Count() > 1)
                 {
-                    break;
+                    var availablePlayerOptions = new List<AttackPhaseActions>()
+                    {
+                        AttackPhaseActions.StrengthAttack,
+                        AttackPhaseActions.PerceptionAttack,
+                        AttackPhaseActions.Heal,
+                        AttackPhaseActions.RollForCard
+                    };
+
+                    var action = player.EvaluateAttackPhaseAction(availablePlayerOptions, this);
+                    PerformAttackPhaseAction(action, player);
                 }
+            });
 
-                //MOVE TO NEXT PLAYER
-                currentPlayerNode = nextPlayerNode ?? Players.First;
-                nextPlayerNode = currentPlayerNode.Next;
-            } while (currentPlayerNode != startingPlayerNode);
+            RemoveDeadPlayers();
+        }
 
+        private void RemoveDeadPlayers()
+        {
             var deadPlayers = Players.Where(p => p.Health == 0).ToList();
 
             foreach (var deadPlayer in deadPlayers)
@@ -198,6 +194,7 @@ namespace DisposableHeroes.Gameplay
                 Players.Remove(deadPlayer);
             }
         }
+
         public void PerformAttackPhaseAction(AttackPhaseActions action, BasePlayer player)
         {
             switch (action)
@@ -264,6 +261,23 @@ namespace DisposableHeroes.Gameplay
             {
                 return new TwentySidedDice().Roll();
             }
+        }
+
+        private void DoActionForAllPlayersInOrder(Action<BasePlayer> action)
+        {
+            var startingPlayerNode = Players.Find(CurrentPlayer);
+            var currentPlayerNode = startingPlayerNode;
+            var nextPlayerNode = currentPlayerNode.Next;
+
+            do
+            {
+                var player = currentPlayerNode.Value;
+
+                action.Invoke(player);
+
+                currentPlayerNode = nextPlayerNode ?? Players.First;
+                nextPlayerNode = currentPlayerNode.Next;
+            } while (currentPlayerNode != startingPlayerNode);
         }
     }
 }
