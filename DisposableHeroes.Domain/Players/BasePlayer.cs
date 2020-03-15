@@ -1,6 +1,7 @@
 ﻿using DisposableHeroes.Domain.Cards;
 using DisposableHeroes.Domain.Cards.BodyParts;
 using DisposableHeroes.Domain.Player;
+using DisposableHeroes.Domain.Players;
 using DisposableHeroes.Domain.Players.Strategies;
 using DisposableHeroes.Gameplay;
 using System.Collections.Generic;
@@ -150,15 +151,47 @@ namespace DisposableHeroes.Domain.Players
             return previouslyEquiptCard;
         }
 
-        public BuildPhaseActions EvaluateBuildPhaseAction(IEnumerable<BuildPhaseActions> availableActions, Game game)
+        //public CardActions EvaluateBuildPhaseAction(IEnumerable<CardActions> availableActions, Game game)
+        //{
+        //    var chosenAction = Strategy.EvaluateBuildPhaseAction(availableActions, this, game);
+        //    //Console.WriteLine(Name + ": " + chosenAction.ToString());
+        //    //LOG PLAYER ACTION HERE IN HISTORY
+        //    return chosenAction;
+        //}
+
+        //public CardActions EvaluateBuildPhaseDrawnCardAction(IEnumerable<CardActions> availableActions, Game game, ICard card)
+        //{
+        //    var chosenAction = Strategy.EvaluateDrawnCardAction(availableActions, this, game, card);
+        //    //Console.WriteLine(Name + ": " + chosenAction.ToString());
+        //    //LOG PLAYER ACTION HERE IN HISTORY
+        //    return chosenAction;
+        //}
+
+        //public PreparePhaseActions EvaluatePreparePhaseDrawnCardAction(IEnumerable<PreparePhaseActions> availableActions, Game game)
+        //{
+        //    var chosenAction = Strategy.EvaluatePreparePhaseAction(availableActions, this, game);
+        //    //Console.WriteLine(Name + ": " + chosenAction.ToString());
+        //    //LOG PLAYER ACTION HERE IN HISTORY
+        //    return chosenAction;
+        //}
+
+        //public AttackPhaseActions EvaluateAttackPhaseAction(IEnumerable<AttackPhaseActions> availableActions, Game game)
+        //{
+        //    var chosenAction = Strategy.EvaluateAttackPhaseAction(availableActions, this, game);
+        //    //Console.WriteLine(Name + ": " + chosenAction.ToString());
+        //    //LOG PLAYER ACTION HERE IN HISTORY
+        //    return chosenAction;
+        //}
+
+        public CardActions EvaluateDrawCardAction(IEnumerable<CardActions> availableActions, Game game)
         {
-            var chosenAction = Strategy.EvaluateBuildPhaseAction(availableActions, this, game);
+            var chosenAction = Strategy.EvaluateDrawCardAction(availableActions, this, game);
             //Console.WriteLine(Name + ": " + chosenAction.ToString());
             //LOG PLAYER ACTION HERE IN HISTORY
             return chosenAction;
         }
 
-        public BuildPhaseActions EvaluateBuildPhaseDrawnCardAction(IEnumerable<BuildPhaseActions> availableActions, Game game, ICard card)
+        public CardActions EvaluateDrawnCardAction(IEnumerable<CardActions> availableActions, Game game, ICard card)
         {
             var chosenAction = Strategy.EvaluateDrawnCardAction(availableActions, this, game, card);
             //Console.WriteLine(Name + ": " + chosenAction.ToString());
@@ -166,12 +199,60 @@ namespace DisposableHeroes.Domain.Players
             return chosenAction;
         }
 
-        public AttackPhaseActions EvaluateAttackPhaseAction(IEnumerable<AttackPhaseActions> availableActions, Game game)
+        public PreparePhaseActions EvaluatePreparePhaseAction(IEnumerable<PreparePhaseActions> availableActions, Game game)
         {
-            var chosenAction = Strategy.EvaluateAttackPhaseAction(availableActions, this, game);
+            var chosenAction = Strategy.EvaluatePreparePhaseAction(availableActions, this, game);
             //Console.WriteLine(Name + ": " + chosenAction.ToString());
             //LOG PLAYER ACTION HERE IN HISTORY
             return chosenAction;
+        }
+
+        public ICard UnequipCardAction()
+        {
+            var card = Strategy.UnequipCardAction(this);
+            //Console.WriteLine(Name + ": " + chosenAction.ToString());
+            //LOG PLAYER ACTION HERE IN HISTORY
+            return card;
+        }
+
+        public ICard EquipCardFromBackpack()
+        {
+            var card = Strategy.EquipCardFromBackpack(this);
+            //Console.WriteLine(Name + ": " + chosenAction.ToString());
+            //LOG PLAYER ACTION HERE IN HISTORY
+            return card;
+        }
+
+        public AttackPhaseActions EvaluateAttackPhaseAction(IEnumerable<AttackPhaseActions> availableActions, Game game)
+        {
+            var card = Strategy.EvaluateAttackPhaseAction(availableActions, this, game);
+            //Console.WriteLine(Name + ": " + chosenAction.ToString());
+            //LOG PLAYER ACTION HERE IN HISTORY
+            return card;
+        }
+
+        public BasePlayer ChoosePlayerToAttack(AttackPhaseActions chosenAction, Game game)
+        {
+            var playerToAttack = Strategy.ChoosePlayerToAttack(chosenAction, this, game);
+            //Console.WriteLine(Name + ": " + chosenAction.ToString());
+            //LOG PLAYER ACTION HERE IN HISTORY
+            return playerToAttack;
+        }
+
+        public SuccessfulPerceptionAttackActions SuccessfulPerceptionAttack(SuccessfulPerceptionAttackActions chosenAction, BasePlayer defendingPlayer, Game game)
+        {
+            var action = Strategy.SuccessfulPerceptionAttack(chosenAction, this, defendingPlayer, game);
+            //Console.WriteLine(Name + ": " + chosenAction.ToString());
+            //LOG PLAYER ACTION HERE IN HISTORY
+            return action;
+        }
+
+        public ICard LootPlayerAction(LootPlayerActions availableActions, BasePlayer defeatedPlayer, Game game)
+        {
+            var card = Strategy.LootPlayerAction(availableActions, this, defeatedPlayer, game);
+            //Console.WriteLine(Name + ": " + chosenAction.ToString());
+            //LOG PLAYER ACTION HERE IN HISTORY
+            return card;
         }
     }
 }

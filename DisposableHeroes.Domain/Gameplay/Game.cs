@@ -58,23 +58,40 @@ namespace DisposableHeroes.Gameplay
 
         public void PlayBuildRound()
         {
+            State = GameState.BuildPhase;
+
             DoActionForAllPlayersInOrder((player) =>
             {
                 var action = ResolveDrawCardForPlayer(player);
                 PerformDrawCardActionPhaseAction(action, player);
             });
+
+            State = GameState.InProgress;
         }
 
         public void PlayPrepareRound()
         {
+            State = GameState.PreparePhase;
+
             DoActionForAllPlayersInOrder((player) =>
             {
+                var availablePlayerOptions = new List<PreparePhaseActions>()
+                {
+                    PreparePhaseActions.DoNothing,
+                    PreparePhaseActions.EquiptCardFromBackpack,
+                    PreparePhaseActions.UnequipCard
+                };
 
+                var action = player.EvaluatePreparePhaseAction(availablePlayerOptions, this);
             });
+
+            State = GameState.InProgress;
         }
 
         public void PlayAttackRound()
         {
+            State = GameState.AttackPhase;
+
             DoActionForAllPlayersInOrder((player) =>
             {
                 // !!!: Might be able to reduce the condition in `if'
@@ -94,6 +111,8 @@ namespace DisposableHeroes.Gameplay
             });
 
             RemoveDeadPlayers();
+
+            State = GameState.InProgress;
         }
         public void SetStartingPlayerAsOneWithLowestHealth()
         {
@@ -107,66 +126,66 @@ namespace DisposableHeroes.Gameplay
             SetStartingPlayer(startingPlayer);
         }
 
-        private BuildPhaseActions ResolveDrawCardForPlayer(BasePlayer player)
+        private CardActions ResolveDrawCardForPlayer(BasePlayer player)
         {
-            var availablePlayerOptions = new List<BuildPhaseActions>();
+            var availablePlayerOptions = new List<CardActions>();
             var diceRoll = new SixSidedDice().Roll();
 
             if (diceRoll < 3)
             {
-                availablePlayerOptions.Add(BuildPhaseActions.DrawHeadCard);
-                availablePlayerOptions.Add(BuildPhaseActions.DrawTorsoCard);
+                availablePlayerOptions.Add(CardActions.DrawHeadCard);
+                availablePlayerOptions.Add(CardActions.DrawTorsoCard);
             }
             else if (diceRoll < 5)
             {
-                availablePlayerOptions.Add(BuildPhaseActions.DrawArmsCard);
-                availablePlayerOptions.Add(BuildPhaseActions.DrawLegsCard);
+                availablePlayerOptions.Add(CardActions.DrawArmsCard);
+                availablePlayerOptions.Add(CardActions.DrawLegsCard);
             }
             else
             {
-                availablePlayerOptions.Add(BuildPhaseActions.DrawWeaponCard);
-                availablePlayerOptions.Add(BuildPhaseActions.DrawSpecialCard);
+                availablePlayerOptions.Add(CardActions.DrawWeaponCard);
+                availablePlayerOptions.Add(CardActions.DrawSpecialCard);
             }
 
-            return player.EvaluateBuildPhaseAction(availablePlayerOptions, this);
+            return player.EvaluateDrawCardAction(availablePlayerOptions, this);
         }
 
-        public void PerformDrawCardActionPhaseAction(BuildPhaseActions action, BasePlayer player)
+        public void PerformDrawCardActionPhaseAction(CardActions action, BasePlayer player)
         {
-            var availablePlayerOptions = new List<BuildPhaseActions>()
+            var availablePlayerOptions = new List<CardActions>()
             {
-                BuildPhaseActions.EquiptCard,
-                BuildPhaseActions.StoreCardInBackpack,
-                BuildPhaseActions.DiscardCard
+                CardActions.EquiptCard,
+                CardActions.StoreCardInBackpack,
+                CardActions.DiscardCard
             };
 
             ICard card = null;
 
             switch (action)
             {
-                case BuildPhaseActions.DrawHeadCard:
+                case CardActions.DrawHeadCard:
                     card = HeadsDeck.Draw();
                     break;
-                case BuildPhaseActions.DrawTorsoCard:
+                case CardActions.DrawTorsoCard:
                     card = TorsosDeck.Draw();
                     break;
-                case BuildPhaseActions.DrawArmsCard:
+                case CardActions.DrawArmsCard:
                     card = ArmsDeck.Draw();
                     break;
-                case BuildPhaseActions.DrawLegsCard:
+                case CardActions.DrawLegsCard:
                     card = LegsDeck.Draw();
                     break;
-                case BuildPhaseActions.DrawWeaponCard:
+                case CardActions.DrawWeaponCard:
                     card = WeaponsDeck.Draw();
                     break;
-                case BuildPhaseActions.DrawSpecialCard:
+                case CardActions.DrawSpecialCard:
                     card = SpecialsDeck.Draw();
                     break;
             }
 
-            var drawAction = player.EvaluateBuildPhaseDrawnCardAction(availablePlayerOptions, this, card);
+            var drawAction = player.EvaluateDrawnCardAction(availablePlayerOptions, this, card);
 
-            if (drawAction == BuildPhaseActions.EquiptCard)
+            if (drawAction == CardActions.EquiptCard)
             {
                 var unequiptCard = player.EquiptCard(card);
 
@@ -175,7 +194,7 @@ namespace DisposableHeroes.Gameplay
                     DiscardDeck.AddToDeck(unequiptCard);
                 }
             }
-            else if (drawAction == BuildPhaseActions.StoreCardInBackpack)
+            else if (drawAction == CardActions.StoreCardInBackpack)
             {
                 if (!player.Backpack.StoreInBackpack(card)) {
                     ICard randCard = player.Backpack.Cards[GameRandomGenerator.Next(0, player.Backpack.Cards.Count)];
@@ -184,7 +203,7 @@ namespace DisposableHeroes.Gameplay
                 }
                 // TODO: If StoreInBackpack fails, descarding a random card and try again. Might need to change it to a helper method.
             }
-            else if (drawAction == BuildPhaseActions.DiscardCard)
+            else if (drawAction == CardActions.DiscardCard)
             {
                 DiscardDeck.AddToDeck(card);
             }

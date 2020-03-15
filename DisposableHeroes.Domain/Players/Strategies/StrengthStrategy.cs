@@ -16,20 +16,20 @@ namespace DisposableHeroes.Domain.Players.Strategies
             return availableActions.First();
         }
 
-        public PhaseActions.BuildPhaseActions EvaluateBuildPhaseAction(IEnumerable<PhaseActions.BuildPhaseActions> availableActions, BasePlayer player, Game game)
+        public PhaseActions.CardActions EvaluateBuildPhaseAction(IEnumerable<PhaseActions.CardActions> availableActions, BasePlayer player, Game game)
         {
-            if (availableActions.Contains(PhaseActions.BuildPhaseActions.DrawArmsCard))
-                return PhaseActions.BuildPhaseActions.DrawArmsCard;
-            else if (availableActions.Contains(PhaseActions.BuildPhaseActions.DrawWeaponCard))
-                return PhaseActions.BuildPhaseActions.DrawWeaponCard;
+            if (availableActions.Contains(PhaseActions.CardActions.DrawArmsCard))
+                return PhaseActions.CardActions.DrawArmsCard;
+            else if (availableActions.Contains(PhaseActions.CardActions.DrawWeaponCard))
+                return PhaseActions.CardActions.DrawWeaponCard;
 
             return availableActions.First();
         }
 
-        public PhaseActions.BuildPhaseActions EvaluateDrawnCardAction(IEnumerable<PhaseActions.BuildPhaseActions> availableActions, BasePlayer player, Game game, ICard card)
+        public PhaseActions.CardActions EvaluateDrawnCardAction(IEnumerable<PhaseActions.CardActions> availableActions, BasePlayer player, Game game, ICard card)
         {
-            if (availableActions.Contains(PhaseActions.BuildPhaseActions.EquiptCard) && NewCardIsStrongerThanCurrent(player, card))
-                return PhaseActions.BuildPhaseActions.EquiptCard;
+            if (availableActions.Contains(PhaseActions.CardActions.EquiptCard) && NewCardIsStrongerThanCurrent(player, card))
+                return PhaseActions.CardActions.EquiptCard;
 
             return availableActions.First();
         }
@@ -48,9 +48,39 @@ namespace DisposableHeroes.Domain.Players.Strategies
             return false;
         }
 
-        public override string ToString()
+        public PhaseActions.CardActions EvaluateDrawCardAction(IEnumerable<PhaseActions.CardActions> availableActions, BasePlayer player, Game game)
         {
-            return "Strength Strategy";
+            return availableActions.First();
+        }
+
+        public PhaseActions.PreparePhaseActions EvaluatePreparePhaseAction(IEnumerable<PhaseActions.PreparePhaseActions> availableActions, BasePlayer player, Game game)
+        {
+            return availableActions.First();
+        }
+
+        public ICard UnequipCardAction(BasePlayer player)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ICard EquipCardFromBackpack(BasePlayer player)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public BasePlayer ChoosePlayerToAttack(PhaseActions.AttackPhaseActions chosenAction, BasePlayer player, Game game)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public PhaseActions.SuccessfulPerceptionAttackActions SuccessfulPerceptionAttack(PhaseActions.SuccessfulPerceptionAttackActions action, BasePlayer attackingPlayer, BasePlayer defendingPlayer, Game game)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ICard LootPlayerAction(PhaseActions.LootPlayerActions availableActions, BasePlayer player, BasePlayer defeatedPlayer, Game game)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

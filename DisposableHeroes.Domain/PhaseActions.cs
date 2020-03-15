@@ -2,17 +2,17 @@
 {
     public static class PhaseActions
     {
-        public enum BuildPhaseActions
+        public enum CardActions
         {
-            EquiptCard,
-            StoreCardInBackpack,
-            DiscardCard,
             DrawHeadCard,
             DrawArmsCard,
             DrawTorsoCard,
             DrawLegsCard,
             DrawWeaponCard,
-            DrawSpecialCard
+            DrawSpecialCard,
+            EquiptCard,
+            StoreCardInBackpack,
+            DiscardCard
         }
 
         public enum PreparePhaseActions
@@ -28,6 +28,29 @@
             PerceptionAttack,
             Heal,
             RollForCard
+        }
+
+        public enum SuccessfulPerceptionAttackActions
+        { 
+            RemoveHead,
+            RemoveArms,
+            RemoveTorso,
+            RemoveLegs,
+            RemoveWeapon,
+            RemoveSpecial
+        }
+
+        public enum LootPlayerActions
+        {
+            DrawHeadCard,
+            DrawArmsCard,
+            DrawTorsoCard,
+            DrawLegsCard,
+            DrawWeaponCard,
+            DrawSpecialCard,
+            EquiptCard,
+            StoreCardInBackpack,
+            DiscardCard
         }
     }
 }
