@@ -6,8 +6,6 @@ namespace DisposableHeroes.Domain
 {
     public static class PresetCards
     {
-        private static int TotalBodyCards = 62;
-
         public static List<HeadCard> AllHeadCards()
         {
             List<HeadCard> cards = new List<HeadCard>();
@@ -168,27 +166,6 @@ namespace DisposableHeroes.Domain
             cards.Add(new ArmsCard("A-S-03", 4, 0, -3));
             cards.Add(new ArmsCard("A-T-03", 2, 0, 1));
 
-
-            // for (int i = 0; i < TotalBodyCards; i++)
-            // {
-            //     if (i < 26)
-            //     {
-            //         cards.Add(new ArmsCard("First Tier", 1, 0, 0));
-            //     }
-            //     else if (i < 44)
-            //     {
-            //         cards.Add(new ArmsCard("Second Tier", 2, 0, 0));
-            //     }
-            //     else if (i < 54)
-            //     {
-            //         cards.Add(new ArmsCard("Third Tier", 3, 0, 0));
-            //     }
-            //     else
-            //     {
-            //         cards.Add(new ArmsCard("Fourth Tier", 4, 0, 0));
-            //     }
-            // }
-
             return cards;
         }
 
@@ -258,27 +235,6 @@ namespace DisposableHeroes.Domain
             cards.Add(new LegsCard("L-R-03", -1, 1, 0));
             cards.Add(new LegsCard("L-S-03", -1, 2, 0));
             cards.Add(new LegsCard("L-T-03", 1, 1, 0));
-
-
-            // for (int i = 0; i < TotalBodyCards; i++)
-            // {
-            //     if (i < 26)
-            //     {
-            //         cards.Add(new LegsCard("First Tier", 0, 1, 0));
-            //     }
-            //     else if (i < 44)
-            //     {
-            //         cards.Add(new LegsCard("Second Tier", 0, 2, 0));
-            //     }
-            //     else if (i < 54)
-            //     {
-            //         cards.Add(new LegsCard("Third Tier", 0, 3, 0));
-            //     }
-            //     else
-            //     {
-            //         cards.Add(new LegsCard("Fourth Tier", 0, 4, 0));
-            //     }
-            // }
 
             return cards;
         }
@@ -361,27 +317,6 @@ namespace DisposableHeroes.Domain
             cards.Add(new TorsoCard("T-M-04", 1, 1, 1, 4));
             cards.Add(new TorsoCard("T-N-04", 1, 1, 1, 4));
 
-
-            // for (int i = 0; i < TotalBodyCards; i++)
-            // {
-            //     if (i < 26)
-            //     {
-            //         cards.Add(new TorsoCard("First Tier", 0, 0, 0, 1));
-            //     }
-            //     else if (i < 44)
-            //     {
-            //         cards.Add(new TorsoCard("Second Tier", 0, 0, 0, 1));
-            //     }
-            //     else if (i < 54)
-            //     {
-            //         cards.Add(new TorsoCard("Third Tier", 0, 0, 0, 1));
-            //     }
-            //     else
-            //     {
-            //         cards.Add(new TorsoCard("Fourth Tier", 0, 0, 0, 1));
-            //     }
-            // }
-
             return cards;
         }
 
@@ -433,26 +368,6 @@ namespace DisposableHeroes.Domain
             cards.Add(new WeaponCard("W-L-03", 3, WeaponType.Normal));
             cards.Add(new WeaponCard("W-M-03", 4, WeaponType.Normal));
             cards.Add(new WeaponCard("W-N-03", 1, WeaponType.IgnoreEnemyDefense));
-
-            // for (int i = 0; i < 54; i++)
-            // {
-            //     if (i < 16)
-            //     {
-            //         cards.Add(new WeaponCard("First Tier", 1));
-            //     }
-            //     else if (i < 32)
-            //     {
-            //         cards.Add(new WeaponCard("Second Tier", 2));
-            //     }
-            //     else if (i < 46)
-            //     {
-            //         cards.Add(new WeaponCard("Third Tier", 3));
-            //     }
-            //     else
-            //     {
-            //         cards.Add(new WeaponCard("Fourth Tier", 4));
-            //     }
-            // }
 
             return cards;
         }
