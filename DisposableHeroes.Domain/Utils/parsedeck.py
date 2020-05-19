@@ -3,7 +3,7 @@ import sys, csv, re
 print(str(sys.argv))
 
 if len(sys.argv) != 2:
-    print("USAGE: parsecard.py [path to csv]")
+    print("USAGE: parsedeck.py [path to csv]")
     quit()
 
 card_type = ""
@@ -25,9 +25,9 @@ elif ("_special_" in sys.argv[1]):
     # card_type = "SpecialCard"
     quit()
 elif ("_weapon_" in sys.argv[1]):
-    print("Detected deck type: Weapon (not yet supported)")
-    # card_type = "WeaponCard"
-    quit()
+    print("Detected deck type: Weapon (NEEDS MANUAL UPDATE ON WEAPONTYPE)")
+    card_type = "WeaponCard"
+    # quit()
 else:
     print("Unsupported deck type. Aborting.")
     quit()
@@ -48,13 +48,18 @@ with open(sys.argv[1]) as csv_file:
 for ridx, row in enumerate(deck):
     col_mark = 'A'
     for val in row:
-        str_val= int(re.search('STR(.*)', val).group(1) if re.search('STR(.*)', val) is not None else "0")
-        agl_val= int(re.search('AGL(.*)', val).group(1) if re.search('AGL(.*)', val) is not None else "0")
-        per_val= int(re.search('PER(.*)', val).group(1) if re.search('PER(.*)', val) is not None else "0")
         if (card_type in ["HeadCard", "ArmsCard", "LegsCard", "TorsoCard"]) and not(str_val == agl_val == per_val == 0):
+            str_val = int(re.search('STR(.*)', val).group(1) if re.search('STR(.*)', val) is not None else "0")
+            agl_val = int(re.search('AGL(.*)', val).group(1) if re.search('AGL(.*)', val) is not None else "0")
+            per_val = int(re.search('PER(.*)', val).group(1) if re.search('PER(.*)', val) is not None else "0")
             if card_type == "TorsoCard":
-                h_val= int(re.search('HEALTH(.*)', val).group(1) if re.search('HEALTH(.*)', val) is not None else "0")
+                h_val = int(re.search('HEALTH(.*)', val).group(1) if re.search('HEALTH(.*)', val) is not None else "0")
                 print(f'cards.Add(new {card_type}(\"{card_type[0]}-{col_mark}-{ridx + 1:02d}\", {str_val}, {agl_val}, {per_val}, {h_val}));')
             else:
                 print(f'cards.Add(new {card_type}(\"{card_type[0]}-{col_mark}-{ridx + 1:02d}\", {str_val}, {agl_val}, {per_val}));')
+        if (card_type == "WeaponCard"):
+            dmg_val = int(re.search('DMG(.*)', val).group(1) if re.search('DMG(.*)', val) is not None else "0")
+            wpn_type = "Normal" if len(val) < 8 else "SPECIAL_NEEDS_UPDATE"
+            if dmg_val != 0:
+                print(f'cards.Add(new {card_type}(\"{card_type[0]}-{col_mark}-{ridx + 1:02d}\", {dmg_val}, WeaponType.{wpn_type}));')
         col_mark = chr(ord(col_mark) + 1)

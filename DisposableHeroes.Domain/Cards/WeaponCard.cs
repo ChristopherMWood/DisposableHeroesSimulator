@@ -5,10 +5,13 @@
         public string Name { get; }
         public int Damage { get; }
 
-        public WeaponCard(string name, int damage)
+        public WeaponType Type { get; }
+
+        public WeaponCard(string name, int damage, WeaponType type)
         {
             Name = name;
             Damage = damage;
+            Type = type;
         }
     }
 }

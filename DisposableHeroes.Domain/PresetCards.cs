@@ -389,25 +389,70 @@ namespace DisposableHeroes.Domain
         {
             List<WeaponCard> cards = new List<WeaponCard>();
 
-            for (int i = 0; i < 54; i++)
-            {
-                if (i < 16)
-                {
-                    cards.Add(new WeaponCard("First Tier", 1));
-                }
-                else if (i < 32)
-                {
-                    cards.Add(new WeaponCard("Second Tier", 2));
-                }
-                else if (i < 46)
-                {
-                    cards.Add(new WeaponCard("Third Tier", 3));
-                }
-                else
-                {
-                    cards.Add(new WeaponCard("Fourth Tier", 4));
-                }
-            }
+            cards.Add(new WeaponCard("W-A-01", 2, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-B-01", 2, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-C-01", 2, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-D-01", 2, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-E-01", 2, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-F-01", 1, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-G-01", 1, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-H-01", 1, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-I-01", 1, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-J-01", 1, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-K-01", 1, WeaponType.CanEquipOnePermanentWeaponOrSpecial));
+            cards.Add(new WeaponCard("W-L-01", 2, WeaponType.CanEquipOnePermanentWeaponOrSpecial));
+            cards.Add(new WeaponCard("W-M-01", 4, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-N-01", 1, WeaponType.DealWeaponDamageBackOnEnemyAttack));
+            cards.Add(new WeaponCard("W-O-01", 2, WeaponType.BlockAllWeaponDamage));
+            cards.Add(new WeaponCard("W-A-02", 2, WeaponType.CanEquipOnePermanentWeaponOrSpecial));
+            cards.Add(new WeaponCard("W-B-02", 2, WeaponType.IgnoreEnemyDefense));
+            cards.Add(new WeaponCard("W-C-02", 1, WeaponType.DealWeaponDamageBackOnEnemyAttack));
+            cards.Add(new WeaponCard("W-D-02", 3, WeaponType.DoubleDamageIfEnemyHasNoWeapon));
+            cards.Add(new WeaponCard("W-E-02", 2, WeaponType.DoubleDamageIfEnemyHasNoWeapon));
+            cards.Add(new WeaponCard("W-F-02", 1, WeaponType.BlockAllWeaponDamage));
+            cards.Add(new WeaponCard("W-G-02", 3, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-H-02", 4, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-I-02", 2, WeaponType.DoubleDamageIfEnemyHasNoWeapon));
+            cards.Add(new WeaponCard("W-J-02", 2, WeaponType.BlockAllWeaponDamage));
+            cards.Add(new WeaponCard("W-K-02", 4, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-L-02", 2, WeaponType.IgnoreEnemyDefense));
+            cards.Add(new WeaponCard("W-M-02", 1, WeaponType.IgnoreEnemyDefense));
+            cards.Add(new WeaponCard("W-N-02", 3, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-O-02", 3, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-A-03", 1, WeaponType.CanEquipOnePermanentWeaponOrSpecial));
+            cards.Add(new WeaponCard("W-B-03", 3, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-C-03", 2, WeaponType.DealWeaponDamageBackOnEnemyAttack));
+            cards.Add(new WeaponCard("W-D-03", 4, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-E-03", 4, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-F-03", 3, WeaponType.DoubleDamageIfEnemyHasNoWeapon));
+            cards.Add(new WeaponCard("W-G-03", 3, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-H-03", 1, WeaponType.BlockAllWeaponDamage));
+            cards.Add(new WeaponCard("W-I-03", 1, WeaponType.BlockAllWeaponDamage));
+            cards.Add(new WeaponCard("W-J-03", 4, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-K-03", 4, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-L-03", 3, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-M-03", 4, WeaponType.Normal));
+            cards.Add(new WeaponCard("W-N-03", 1, WeaponType.IgnoreEnemyDefense));
+
+            // for (int i = 0; i < 54; i++)
+            // {
+            //     if (i < 16)
+            //     {
+            //         cards.Add(new WeaponCard("First Tier", 1));
+            //     }
+            //     else if (i < 32)
+            //     {
+            //         cards.Add(new WeaponCard("Second Tier", 2));
+            //     }
+            //     else if (i < 46)
+            //     {
+            //         cards.Add(new WeaponCard("Third Tier", 3));
+            //     }
+            //     else
+            //     {
+            //         cards.Add(new WeaponCard("Fourth Tier", 4));
+            //     }
+            // }
 
             return cards;
         }
