@@ -75,27 +75,6 @@ namespace DisposableHeroes.Domain
             cards.Add(new HeadCard("H-T-03", 0, 1, 3));
             cards.Add(new HeadCard("H-U-03", 0, 0, 0));
 
-
-            // for (var i = 0; i < TotalBodyCards; i++)
-            // {
-            //     if (i < 26)
-            //     {
-            //         cards.Add(new HeadCard("First Tier", 0, 0, 1));
-            //     }
-            //     else if (i < 44)
-            //     {
-            //         cards.Add(new HeadCard("Second Tier", 0, 0, 2));
-            //     }
-            //     else if (i < 54)
-            //     {
-            //         cards.Add(new HeadCard("Third Tier", 0, 0, 3));
-            //     }
-            //     else
-            //     {
-            //         cards.Add(new HeadCard("Fourth Tier", 0, 0, 4));
-            //     }
-            // }
-
             return cards;
         }
 
