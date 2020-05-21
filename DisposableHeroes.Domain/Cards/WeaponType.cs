@@ -2,11 +2,11 @@
 {
     public enum WeaponType
     {
-        Normal,
-        CanEquipOnePermanentWeaponOrSpecial,
-        DealWeaponDamageBackOnEnemyAttack,
-        BlockAllWeaponDamage,
-        IgnoreEnemyDefense,
-        DoubleDamageIfEnemyHasNoWeapon
+        Normal,                                     // implemented
+        CanEquipOneMorePermanentWeaponOrSpecial,    // NOT implemented
+        DealWeaponDamageBackOnEnemyAttack,          // implemented
+        BlockAllWeaponDamage,                       // implemented
+        IgnoreEnemyDefense,                         // implemented
+        DoubleDamageIfEnemyHasNoWeapon              // implemented
     }
 }

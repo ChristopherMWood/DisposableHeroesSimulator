@@ -30,14 +30,17 @@ namespace DisposableHeroes
                     continue;
 
                 summary.TotalRounds += gameSummary.RoundsInGame;
-                summary.TotalHealth += gameSummary.WinningPlayer.Health;
-                summary.TotalStrength += gameSummary.WinningPlayer.Strength;
-                summary.TotalAgility += gameSummary.WinningPlayer.Agility;
-                summary.TotalPerception += gameSummary.WinningPlayer.Perception;
-                summary.TotalWeaponDamage += gameSummary.WinningPlayer.Weapon != null ? gameSummary.WinningPlayer.Weapon.Damage : 0;
-                TrackStringOccurence(summary.StrategiesUsed, gameSummary.WinningPlayer.Strategy.ToString());
-                TrackStringOccurence(summary.PlayerWinsByName, gameSummary.WinningPlayer.Name);
-                successfulRuns++;
+                if (gameSummary.WinningPlayer != null)
+                {
+                    summary.TotalHealth += gameSummary.WinningPlayer.Health;
+                    summary.TotalStrength += gameSummary.WinningPlayer.Strength;
+                    summary.TotalAgility += gameSummary.WinningPlayer.Agility;
+                    summary.TotalPerception += gameSummary.WinningPlayer.Perception;
+                    summary.TotalWeaponDamage += gameSummary.WinningPlayer.Weapon != null ? gameSummary.WinningPlayer.Weapon.Damage : 0;
+                    TrackStringOccurence(summary.StrategiesUsed, gameSummary.WinningPlayer.Strategy.ToString());
+                    TrackStringOccurence(summary.PlayerWinsByName, gameSummary.WinningPlayer.Name);
+                    successfulRuns++;
+                }
 
                 if (i % (simulationsToRun / 10) == 0)
                     Console.WriteLine($"- {i}/{successfulRuns}");

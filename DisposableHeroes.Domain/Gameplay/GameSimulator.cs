@@ -41,14 +41,15 @@ namespace DisposableHeroes.Domain.Gameplay
 
                 game.PlayPrepareRound();
                 game.PlayAttackRound();
-                game.SetStartingPlayerAsOneWithLowestHealth();
 
                 game.CheckForGameOver();
+
+                game.SetStartingPlayerAsOneWithLowestHealth();
             }
 
             return new GameSummary()
             {
-                WinningPlayer = game.Players.First(),
+                WinningPlayer = game.Players.Count > 0 ? game.Players.First(): null,
                 RoundsInGame = round
             };
         }

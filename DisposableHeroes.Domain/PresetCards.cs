@@ -313,12 +313,12 @@ namespace DisposableHeroes.Domain
             cards.Add(new WeaponCard("W-H-01", 1, WeaponType.Normal));
             cards.Add(new WeaponCard("W-I-01", 1, WeaponType.Normal));
             cards.Add(new WeaponCard("W-J-01", 1, WeaponType.Normal));
-            cards.Add(new WeaponCard("W-K-01", 1, WeaponType.CanEquipOnePermanentWeaponOrSpecial));
-            cards.Add(new WeaponCard("W-L-01", 2, WeaponType.CanEquipOnePermanentWeaponOrSpecial));
+            cards.Add(new WeaponCard("W-K-01", 1, WeaponType.CanEquipOneMorePermanentWeaponOrSpecial));
+            cards.Add(new WeaponCard("W-L-01", 2, WeaponType.CanEquipOneMorePermanentWeaponOrSpecial));
             cards.Add(new WeaponCard("W-M-01", 4, WeaponType.Normal));
             cards.Add(new WeaponCard("W-N-01", 1, WeaponType.DealWeaponDamageBackOnEnemyAttack));
             cards.Add(new WeaponCard("W-O-01", 2, WeaponType.BlockAllWeaponDamage));
-            cards.Add(new WeaponCard("W-A-02", 2, WeaponType.CanEquipOnePermanentWeaponOrSpecial));
+            cards.Add(new WeaponCard("W-A-02", 2, WeaponType.CanEquipOneMorePermanentWeaponOrSpecial));
             cards.Add(new WeaponCard("W-B-02", 2, WeaponType.IgnoreEnemyDefense));
             cards.Add(new WeaponCard("W-C-02", 1, WeaponType.DealWeaponDamageBackOnEnemyAttack));
             cards.Add(new WeaponCard("W-D-02", 3, WeaponType.DoubleDamageIfEnemyHasNoWeapon));
@@ -333,7 +333,7 @@ namespace DisposableHeroes.Domain
             cards.Add(new WeaponCard("W-M-02", 1, WeaponType.IgnoreEnemyDefense));
             cards.Add(new WeaponCard("W-N-02", 3, WeaponType.Normal));
             cards.Add(new WeaponCard("W-O-02", 3, WeaponType.Normal));
-            cards.Add(new WeaponCard("W-A-03", 1, WeaponType.CanEquipOnePermanentWeaponOrSpecial));
+            cards.Add(new WeaponCard("W-A-03", 1, WeaponType.CanEquipOneMorePermanentWeaponOrSpecial));
             cards.Add(new WeaponCard("W-B-03", 3, WeaponType.Normal));
             cards.Add(new WeaponCard("W-C-03", 2, WeaponType.DealWeaponDamageBackOnEnemyAttack));
             cards.Add(new WeaponCard("W-D-03", 4, WeaponType.Normal));
@@ -353,7 +353,7 @@ namespace DisposableHeroes.Domain
 
         public static List<SpecialCard> AllSpecialCards()
         {
-            return new List<SpecialCard>() {new SpecialCard(SpecialType.OneTimeUse)};
+            return new List<SpecialCard>() {new SpecialCard(SpecialType.OneTimeUse, SpecialEffect.GainHealthOnceByFive)};
         }
     }
 }

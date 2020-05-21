@@ -39,7 +39,7 @@ namespace DisposableHeroes.Gameplay
 
         public void CheckForGameOver()
         {
-            if (Players.Count() == 1)
+            if (Players.Count() <= 1)
                 State = GameState.GameEnded;
         }
 
@@ -116,14 +116,17 @@ namespace DisposableHeroes.Gameplay
         }
         public void SetStartingPlayerAsOneWithLowestHealth()
         {
-            var startingPlayer = Players.First();
-
-            foreach (var player in Players.Where(player => player.Health < startingPlayer.Health))
+            if (Players.Count > 0)
             {
-                startingPlayer = player;
-            }
+                var startingPlayer = Players.First();
 
-            SetStartingPlayer(startingPlayer);
+                foreach (var player in Players.Where(player => player.Health < startingPlayer.Health))
+                {
+                    startingPlayer = player;
+                }
+
+                SetStartingPlayer(startingPlayer);
+            }
         }
 
         private CardActions ResolveDrawCardForPlayer(BasePlayer player)
@@ -197,6 +200,7 @@ namespace DisposableHeroes.Gameplay
             else if (drawAction == CardActions.StoreCardInBackpack)
             {
                 if (!player.Backpack.StoreInBackpack(card)) {
+                    // NOTE: This is fine for now but we might want to open up the choices to discard a specific card
                     ICard randCard = player.Backpack.Cards[GameRandomGenerator.Next(0, player.Backpack.Cards.Count)];
                     player.Backpack.RemoveFromBackpack(randCard);
                     player.Backpack.StoreInBackpack(card);
@@ -259,15 +263,44 @@ namespace DisposableHeroes.Gameplay
                 if (attackingPlayerRoll > defendingPlayerRoll)
                 {
                     var attackDamage = new TwoSixSidedDice().Roll();
+                    var bouncedAttackDamage = 0;
 
                     if (attackingPlayer.Weapon != null)
-                        attackDamage += attackingPlayer.Weapon.Damage;
+                    {
+                        if (attackingPlayer.Weapon.Type == WeaponType.DoubleDamageIfEnemyHasNoWeapon && defendingPlayer.Weapon == null)
+                        {
+                            attackDamage += 2 * attackingPlayer.Weapon.Damage;
+                        }
+
+                        if (defendingPlayer.Weapon != null)
+                        {
+                            switch (defendingPlayer.Weapon.Type)
+                            {
+                                case WeaponType.DealWeaponDamageBackOnEnemyAttack:
+                                    bouncedAttackDamage = defendingPlayer.Weapon.Damage;
+                                    break;
+
+                                case WeaponType.BlockAllWeaponDamage:
+                                    break;
+
+                                default:
+                                    attackDamage += attackingPlayer.Weapon.Damage;
+                                    break;
+                            }
+                        }
+                    }
+
 
                     defendingPlayer.Health -= attackDamage;
+                    attackingPlayer.Health -= bouncedAttackDamage;
                     break;
                 }
-                else if (attackingPlayerRoll <= defendingPlayerRoll)
+                else if (attackingPlayerRoll <= defendingPlayerRoll && attackingPlayer.Weapon != null)
                 {
+                    if (attackingPlayer.Weapon.Type == WeaponType.IgnoreEnemyDefense)
+                    {
+                        defendingPlayer.Health -= attackingPlayer.Weapon.Damage;
+                    }
                     break;
                 }
             }
