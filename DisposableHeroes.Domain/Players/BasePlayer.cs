@@ -1,11 +1,10 @@
 ﻿using DisposableHeroes.Domain.Cards;
 using DisposableHeroes.Domain.Cards.BodyParts;
+using DisposableHeroes.Domain.Constants;
 using DisposableHeroes.Domain.Player;
-using DisposableHeroes.Domain.Players;
 using DisposableHeroes.Domain.Players.Strategies;
 using DisposableHeroes.Gameplay;
 using System.Collections.Generic;
-using DisposableHeroes.Domain.Constants;
 using static DisposableHeroes.Domain.PhaseActions;
 
 namespace DisposableHeroes.Domain.Players
@@ -28,7 +27,7 @@ namespace DisposableHeroes.Domain.Players
             Strategy = strategy;
         }
 
-        private int health = PlayerConstants.InitialHealth;
+        private int health = GameConstants.InitialPlayerHealth;
         public int Health
         {
             get
@@ -37,8 +36,8 @@ namespace DisposableHeroes.Domain.Players
             }
             set
             {
-                if (value > GameConstants.MaxHealth)
-                    health = GameConstants.MaxHealth;
+                if (value > GameConstants.MaxPlayerHealth)
+                    health = GameConstants.MaxPlayerHealth;
                 else if (value < 0)
                     health = 0;
                 else
@@ -50,7 +49,7 @@ namespace DisposableHeroes.Domain.Players
         {
             get
             {
-                var total = PlayerConstants.InitialStrength;
+                var total = GameConstants.BaseStrengthStat;
 
                 if (Head != null)
                     total += Head.Strength;
@@ -72,7 +71,7 @@ namespace DisposableHeroes.Domain.Players
         {
             get
             {
-                var total = PlayerConstants.InitialAgility;
+                var total = GameConstants.BaseAgilityStat;
 
                 if (Head != null)
                     total += Head.Agility;
@@ -94,7 +93,7 @@ namespace DisposableHeroes.Domain.Players
         {
             get
             {
-                var total = PlayerConstants.InitialPerception;
+                var total = GameConstants.BasePerceptionStat;
 
                 if (Head != null)
                     total += Head.Perception;

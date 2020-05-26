@@ -12,7 +12,7 @@ namespace DisposableHeroes.Domain.Player
 
         public bool StoreInBackpack(ICard card)
         {
-            if (Cards.Count() < PlayerConstants.MaxBackpackCapacity)
+            if (Cards.Count() < GameConstants.MaxBackpackCapacity)
             {
                 Cards.Add(card);
                 return true;

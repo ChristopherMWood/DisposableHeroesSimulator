@@ -1,4 +1,5 @@
-﻿using DisposableHeroes.Domain.Players;
+﻿using DisposableHeroes.Domain.Constants;
+using DisposableHeroes.Domain.Players;
 using DisposableHeroes.Domain.Stats;
 using DisposableHeroes.Gameplay;
 using System;
@@ -27,16 +28,16 @@ namespace DisposableHeroes.Domain.Gameplay
             {
                 round++;
 
-                if (round > 100)
+                if (round > GameConstants.MaxRoundsBeforeInvalidGame)
                 {
                     Console.WriteLine("GAME ENDED PREMATURELY (Infinite Game Loop Detected)");
                     return null;
                 }
 
-                if (round == 1)
+                if (round == 1 && GameConstants.DealSpecialCardsOnFirstRound)
                     game.GiveAllPlayersSpecialCard();
 
-                if (game.Players.Count > 2)
+                if (game.Players.Count >= GameConstants.MinimumNumberOfPlayersRequiredForBuildPhase)
                     game.PlayBuildRound();
 
                 game.PlayPrepareRound();
@@ -44,7 +45,8 @@ namespace DisposableHeroes.Domain.Gameplay
 
                 game.CheckForGameOver();
 
-                game.SetStartingPlayerAsOneWithLowestHealth();
+                if (GameConstants.SetStartingPlayerAsOneWithLowestHealth)
+                    game.SetStartingPlayerAsOneWithLowestHealth();
             }
 
             return new GameSummary()

@@ -122,7 +122,8 @@ namespace DisposableHeroes.Gameplay
 
                 foreach (var player in Players.Where(player => player.Health < startingPlayer.Health))
                 {
-                    startingPlayer = player;
+                    if (player.Health < startingPlayer.Health)
+                        startingPlayer = player;
                 }
 
                 SetStartingPlayer(startingPlayer);
@@ -236,7 +237,7 @@ namespace DisposableHeroes.Gameplay
 
                     break;
                 case AttackPhaseActions.Heal:
-                    player.Health += GameConstants.HealingDuringAttack;
+                    player.Health += GameConstants.AttackPhaseHealthGain;
                     break;
                 case AttackPhaseActions.RollForCard:
                      var drawCardAction = ResolveDrawCardForPlayer(player);
@@ -308,11 +309,11 @@ namespace DisposableHeroes.Gameplay
 
         private static int RollDiceForSkill(int skillLevel)
         {
-            if (skillLevel < 4)
+            if (skillLevel < GameConstants.MinimumSkillForBetterDice)
             {
                 return new SixSidedDice().Roll();
             }
-            else if (skillLevel < 8)
+            else if (skillLevel < GameConstants.MinimumSkillForBestDice)
             {
                 return new TwoSixSidedDice().Roll();
             }

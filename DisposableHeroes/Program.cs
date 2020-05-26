@@ -11,12 +11,11 @@ namespace DisposableHeroes
         public static void Main()
         {
             var summary = new SimulationSummary();
-            var simulationsToRun = 10000;
             var successfulRuns = 0;
 
-            Console.WriteLine($"Simulating {simulationsToRun} games");
+            Console.WriteLine($"Simulating {SimulationConstants.SimulationsToRun} games");
 
-            for (var i = 1; i <= simulationsToRun; i++)
+            for (var i = 1; i <= SimulationConstants.SimulationsToRun; i++)
             {
                 var players = new List<BasePlayer>()
                 {
@@ -42,11 +41,11 @@ namespace DisposableHeroes
                     successfulRuns++;
                 }
 
-                if (i % (simulationsToRun / 10) == 0)
+                if (i % (SimulationConstants.SimulationsToRun / 10) == 0)
                     Console.WriteLine($"- {i}/{successfulRuns}");
             }
 
-            Console.WriteLine($"Number of Failed Simulations: {simulationsToRun - successfulRuns}");
+            Console.WriteLine($"Number of Failed Simulations: {SimulationConstants.SimulationsToRun - successfulRuns}");
 
             summary.NumberOfSimulations = successfulRuns;
             PrintSimulationSummary(summary);
