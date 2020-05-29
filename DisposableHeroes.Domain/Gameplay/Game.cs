@@ -45,22 +45,7 @@ namespace DisposableHeroes.Gameplay
 
         public void SetStartingPlayer(Player player)
         {
-            if (player != null)
-            {
-                CurrentPlayer = player;
-            }
-        }
-
-        public void SetStartingPlayer(List<Player> players)
-        {
-            foreach (var player in players)
-            {
-                if (player.Health > 0)
-                {
-                    CurrentPlayer = player;
-                    break;
-                }
-            }
+            CurrentPlayer = player;
         }
 
         public void GiveAllPlayersSpecialCard()
@@ -118,11 +103,6 @@ namespace DisposableHeroes.Gameplay
                             if (unequiptCard != null)
                             {
                                 DiscardDeck.AddToDeck(unequiptCard);
-
-                                if (!(unequiptCard is SpecialCard) && !(unequiptCard is WeaponCard))
-                                {
-                                    player.Health -= GameConstants.DamageFromPlayerRemovingBodyPart;
-                                }
                             }
                         }
                         break;
@@ -137,42 +117,17 @@ namespace DisposableHeroes.Gameplay
                 //TODO !!!: Might be able to reduce the condition in `if'
                 if (Players.Count(p => p.Health > 0) > 1)
                 {
-                    var availablePlayerOptions = new List<PlayerActions>()
+                    var availablePlayerOptions = new List<BasicActions>()
                     {
-                        PlayerActions.StrengthAttack,
-                        PlayerActions.PerceptionAttack,
-                        PlayerActions.Heal,
-                        PlayerActions.RollForCard,
-                        PlayerActions.DoNothing
+                        BasicActions.StrengthAttack,
+                        BasicActions.PerceptionAttack,
+                        BasicActions.Heal,
+                        BasicActions.RollForCard,
+                        BasicActions.DoNothing
                     };
 
-                    var playerAction = player.PerformPlayerAction(GameplayEvent.AttackPhase, availablePlayerOptions, this);
-                    var enemySelected = playerAction.Item2 != null;
-
-                    switch (playerAction.Item1)
-                    {
-                        case PlayerActions.StrengthAttack:
-                            if (enemySelected)
-                            {
-                                StrengthAttackPlayer(player, playerAction.Item2);
-                            }
-                            break;
-                        case PlayerActions.PerceptionAttack:
-                            var cardTargeted = playerAction.Item3 != null;
-
-                            if (enemySelected && cardTargeted)
-                            {
-                                PerceptionAttackPlayer(player, playerAction.Item2, playerAction.Item3);
-                            }
-                            break;
-                        case PlayerActions.Heal:
-                            player.Health += GameConstants.AttackPhaseHealthGain;
-                            break;
-                        case PlayerActions.RollForCard:
-                            var drawCardAction = ResolveDrawCardForPlayer(player);
-                            PerformDrawCardActionPhaseAction(drawCardAction, player); //TODO: Needs to be replaced with simpler call
-                            break;
-                    }
+                    var action = player.PerformAction(GameplayEvent.AttackPhase, availablePlayerOptions, this);
+                    PerformAttackPhaseAction(action, player);
                 }
             });
 
@@ -200,7 +155,7 @@ namespace DisposableHeroes.Gameplay
         private BasicActions ResolveDrawCardForPlayer(Player player)
         {
             var availablePlayerOptions = new List<BasicActions>();
-            var diceRoll = SixSidedDice.Roll();
+            var diceRoll = new SixSidedDice().Roll();
 
             if (diceRoll < 3)
             {
@@ -254,7 +209,7 @@ namespace DisposableHeroes.Gameplay
                     break;
             }
 
-            //Console.WriteLine(card.PrintReadable());
+            // Console.WriteLine(card.PrintReadable());
 
             var drawnCardAction = player.PerformCardAction(GameplayEvent.CardDrawn, availablePlayerOptions, this, card);
 
@@ -303,6 +258,27 @@ namespace DisposableHeroes.Gameplay
             }
         }
 
+        public void PerformAttackPhaseAction(BasicActions action, Player player)
+        {
+            switch (action)
+            {
+                case BasicActions.StrengthAttack:
+                    var playerToAttack = GetRandomPlayerToAttack(player);
+                    StrengthAttackPlayer(player, playerToAttack);
+                    break;
+                case BasicActions.PerceptionAttack:
+                    //TODO: Implement
+                    break;
+                case BasicActions.Heal:
+                    player.Health += GameConstants.AttackPhaseHealthGain;
+                    break;
+                case BasicActions.RollForCard:
+                     var drawCardAction = ResolveDrawCardForPlayer(player);
+                    PerformDrawCardActionPhaseAction(drawCardAction, player); //TODO: Needs to be replaced with simpler call
+                    break;
+            }
+        }
+
         public Player GetRandomPlayerToAttack(Player playerToExclude)
         {
             var playersToAttack = Players.Where(p => p != playerToExclude).ToList();
@@ -311,7 +287,6 @@ namespace DisposableHeroes.Gameplay
 
         public void StrengthAttackPlayer(Player attackingPlayer, Player defendingPlayer)
         {
-            State = GameState.InProgress;
             var attacking = true;
 
             while (attacking)
@@ -321,7 +296,7 @@ namespace DisposableHeroes.Gameplay
 
                 if (attackingPlayerRoll > defendingPlayerRoll)
                 {
-                    var attackDamage = TwoSixSidedDice.Roll();
+                    var attackDamage = new TwoSixSidedDice().Roll();
                     var bouncedAttackDamage = 0;
 
                     if (attackingPlayer.Weapon != null)
@@ -365,37 +340,19 @@ namespace DisposableHeroes.Gameplay
             }
         }
 
-        public void PerceptionAttackPlayer(Player attackingPlayer, Player defendingPlayer, ICard targetedCard)
-        {
-            var attackingPlayerRoll = RollDiceForSkill(attackingPlayer.Strength);
-            var defendingPlayerRoll = RollDiceForSkill(defendingPlayer.Agility);
-
-            if (attackingPlayerRoll > defendingPlayerRoll)
-            {
-                //TODO: Need to implement unequipt from backpack when those rules are determined
-                var unequiptCard = defendingPlayer.UnequiptCard(targetedCard);
-
-                if (unequiptCard != null)
-                {
-                    DiscardDeck.AddToDeck(unequiptCard);
-                    defendingPlayer.Health -= GameConstants.SuccessfulPerceptionAttackDamage;
-                }
-            }
-        }
-
         private static int RollDiceForSkill(int skillLevel)
         {
             if (skillLevel < GameConstants.MinimumSkillForBetterDice)
             {
-                return SixSidedDice.Roll();
+                return new SixSidedDice().Roll();
             }
             else if (skillLevel < GameConstants.MinimumSkillForBestDice)
             {
-                return TwoSixSidedDice.Roll();
+                return new TwoSixSidedDice().Roll();
             }
             else
             {
-                return TwentySidedDice.Roll();
+                return new TwentySidedDice().Roll();
             }
         }
 
