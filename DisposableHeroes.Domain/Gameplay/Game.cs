@@ -209,6 +209,8 @@ namespace DisposableHeroes.Gameplay
                     break;
             }
 
+            // Console.WriteLine(card.PrintReadable());
+
             var drawnCardAction = player.PerformCardAction(GameplayEvent.CardDrawn, availablePlayerOptions, this, card);
 
             if (drawnCardAction.Item1 == CardActions.EquiptCard)

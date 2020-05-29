@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Linq;
+using System.Text.Json;
 
 namespace DisposableHeroes.Domain.Cards
 {
@@ -12,6 +13,32 @@ namespace DisposableHeroes.Domain.Cards
         {
             Type = type;
             Effect = effect;
+        }
+
+        public string Print()
+        {
+            return JsonSerializer.Serialize(this);
+        }
+
+        public string PrintReadable()
+        {
+            string output = @"[ ";
+
+            foreach (var p in this.GetType().GetProperties())
+            {
+                if (p == this.GetType().GetProperties().Last())
+                {
+                    output += p.Name + ": " + p.GetValue(this) + " ";
+                }
+                else
+                {
+                    output += p.Name + ": " + p.GetValue(this) + ",\t";
+                }
+            }
+
+            output += "]";
+
+            return output;
         }
     }
 }
