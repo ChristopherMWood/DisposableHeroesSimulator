@@ -1,5 +1,4 @@
 ﻿using DisposableHeroes.Domain.Constants;
-using DisposableHeroes.Domain.Players;
 using DisposableHeroes.Domain.Stats;
 using DisposableHeroes.Gameplay;
 using System;
@@ -10,7 +9,7 @@ namespace DisposableHeroes.Domain.Gameplay
 {
     public static class GameSimulator
     {
-        public static GameSummary SimulateGame(List<BasePlayer> players, BasePlayer startingPlayer)
+        public static GameSummary SimulateGame(List<Players.Player> players, Players.Player startingPlayer)
         {
             var game = new Game(players);
             var round = 0;

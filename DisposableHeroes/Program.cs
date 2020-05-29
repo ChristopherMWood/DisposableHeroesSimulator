@@ -17,11 +17,11 @@ namespace DisposableHeroes
 
             for (var i = 1; i <= SimulationConstants.SimulationsToRun; i++)
             {
-                var players = new List<BasePlayer>()
+                var players = new List<Player>()
                 {
-                    new BasePlayer("Player 1", new StrengthStrategy()),
-                    new BasePlayer("Player 2", new HealerStrategy()),
-                    new BasePlayer("Player 3", new PrimitiveStrategy())
+                    new Player("Player 1", new StrengthStrategy()),
+                    new Player("Player 2", new HealerStrategy()),
+                    new Player("Player 3", new PrimitiveStrategy())
                 };
                 var gameSummary = GameSimulator.SimulateGame(players, players[0]);
 

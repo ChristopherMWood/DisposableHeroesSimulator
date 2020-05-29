@@ -4,7 +4,7 @@ namespace DisposableHeroes.Domain.Stats
 {
     public class GameSummary
     {
-        public BasePlayer WinningPlayer;
+        public Players.Player WinningPlayer;
         public int RoundsInGame;
     }
 } 

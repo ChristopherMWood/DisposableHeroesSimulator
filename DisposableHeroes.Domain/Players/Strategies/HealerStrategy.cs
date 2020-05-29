@@ -1,64 +1,33 @@
-﻿using DisposableHeroes.Domain.Cards;
+﻿using DisposableHeroes.Domain.Actions;
+using DisposableHeroes.Domain.Cards;
+using DisposableHeroes.Domain.Gameplay;
 using DisposableHeroes.Gameplay;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using static DisposableHeroes.Domain.PhaseActions;
 
 namespace DisposableHeroes.Domain.Players.Strategies
 {
     public class HealerStrategy : IPlayerStrategy
     {
-        public BasePlayer ChoosePlayerToAttack(AttackPhaseActions chosenAction, BasePlayer player, Game game)
-        {
-            return null;
-        }
-
-        public ICard EquipCardFromBackpack(BasePlayer player)
-        {
-            return null;
-        }
-
-        public AttackPhaseActions EvaluateAttackPhaseAction(IEnumerable<AttackPhaseActions> availableActions, BasePlayer player, Game game)
-        {
-            if (game.Players.Count > 2)
-                return PhaseActions.AttackPhaseActions.Heal;
-
-            return PhaseActions.AttackPhaseActions.StrengthAttack;
-        }
-
-        public PhaseActions.CardActions EvaluateBuildPhaseAction(IEnumerable<PhaseActions.CardActions> availableActions, BasePlayer player, Game game)
+        public BasicActions PerformAction(Player player, GameplayEvent gameplayEvent, IEnumerable<BasicActions> availableActions, Game game)
         {
             return availableActions.First();
         }
 
-        public PhaseActions.CardActions EvaluateDrawCardAction(IEnumerable<PhaseActions.CardActions> availableActions, BasePlayer player, Game game)
+        public Tuple<CardActions, ICard> PerformCardAction(Player player, GameplayEvent gameplayEvent, IEnumerable<CardActions> availableActions, Game game, ICard card = null)
         {
-            return availableActions.First();
+            return new Tuple<CardActions, ICard> (availableActions.First(), null);
         }
 
-        public CardActions EvaluateDrawnCardAction(IEnumerable<CardActions> availableActions, BasePlayer player, Game game, ICard card)
+        public Tuple<PlayerActions, Player> PerformPlayerAction(Player player, GameplayEvent gameplayEvent, IEnumerable<PlayerActions> availableActions, Game game)
         {
-            return availableActions.First();
+            return new Tuple<PlayerActions, Player>(availableActions.First(), null);
         }
 
-        public PreparePhaseActions EvaluatePreparePhaseAction(IEnumerable<PreparePhaseActions> availableActions, BasePlayer player, Game game)
+        public Tuple<LootActions, ICard> LootPlayerAction(Player player, GameplayEvent gameplayEvent, IEnumerable<LootActions> availableActions, Game game, Player killedPlayer)
         {
-            return availableActions.First();
-        }
-
-        public ICard LootPlayerAction(LootPlayerActions availableActions, BasePlayer player, BasePlayer defeatedPlayer, Game game)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public SuccessfulPerceptionAttackActions SuccessfulPerceptionAttack(SuccessfulPerceptionAttackActions action, BasePlayer attackingPlayer, BasePlayer defendingPlayer, Game game)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public ICard UnequipCardAction(BasePlayer player)
-        {
-            throw new System.NotImplementedException();
+            return new Tuple<LootActions, ICard>(availableActions.First(), null);
         }
     }
 }

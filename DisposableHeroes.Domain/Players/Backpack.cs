@@ -24,23 +24,16 @@ namespace DisposableHeroes.Domain.Player
         public ICard RemoveFromBackpack(ICard card)
         {
             var index = Cards.IndexOf(card);
-            var cardBeingRemoved = Cards[index];
-            Cards.RemoveAt(index);
 
-            return cardBeingRemoved;
+            if (index >= 0)
+            {
+                var cardBeingRemoved = Cards[index];
+                Cards.RemoveAt(index);
+
+                return cardBeingRemoved;
+            }
+
+            return null;
         }
-
-        // public ICard RemoveRandomFromBackpack()
-        // {
-        //     if (Cards.Count > 0)
-        //     {
-        //         var rand = new Random();
-        //         var index = rand.Next(0, Cards.Count);
-        //         var cardBeingRemoved = Cards[index];
-        //         Cards.RemoveAt(index);
-
-        //         return cardBeingRemoved;
-        //     }
-        // }
     }
 }
