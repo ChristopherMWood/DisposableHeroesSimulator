@@ -7,6 +7,7 @@
         LootPlayerTorso,
         LootPlayerLegs,
         LootPlayerWeapon,
-        LootPlayerSpecial
+        LootPlayerSpecial,
+        DoNothing
     }
 }

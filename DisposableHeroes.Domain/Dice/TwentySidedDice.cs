@@ -4,7 +4,7 @@ namespace DisposableHeroes.Domain.Dice
 {
     public class TwentySidedDice : BaseDice
     {
-        public int Roll()
+        public static int Roll()
         {
             return Random.Next(1, 21);
         }

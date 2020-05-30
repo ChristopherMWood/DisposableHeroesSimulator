@@ -1,6 +1,6 @@
 ﻿using DisposableHeroes.Domain.Gameplay;
 using DisposableHeroes.Domain.Players;
-using DisposableHeroes.Domain.Players.Strategies;
+using DisposableHeroes.Domain.Players.Strategies.GenericStrategies;
 using System;
 using System.Collections.Generic;
 

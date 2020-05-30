@@ -2,9 +2,9 @@
 {
     public class TwoSixSidedDice : BaseDice
     {
-        public int Roll()
+        public static int Roll()
         {
-            return new SixSidedDice().Roll() + new SixSidedDice().Roll();
+            return SixSidedDice.Roll() + SixSidedDice.Roll();
         }
     }
 }
