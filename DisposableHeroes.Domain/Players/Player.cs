@@ -208,7 +208,7 @@ namespace DisposableHeroes.Domain.Players
             return this.Strategy.PerformCardAction(this, gameplayEvent, availableActions, game, card);
         }
 
-        public Tuple<PlayerActions, Player> PerformPlayerAction(GameplayEvent gameplayEvent, IEnumerable<PlayerActions> availableActions, Game game)
+        public Tuple<PlayerActions, Player, ICard> PerformPlayerAction(GameplayEvent gameplayEvent, IEnumerable<PlayerActions> availableActions, Game game)
         {
             //TODO: Log user action here for player history
             return this.Strategy.PerformPlayerAction(this, gameplayEvent, availableActions, game);

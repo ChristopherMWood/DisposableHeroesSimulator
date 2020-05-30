@@ -20,9 +20,10 @@ namespace DisposableHeroes.Domain.Players.Strategies
             return new Tuple<CardActions, ICard> (availableActions.First(), null);
         }
 
-        public Tuple<PlayerActions, Player> PerformPlayerAction(Player player, GameplayEvent gameplayEvent, IEnumerable<PlayerActions> availableActions, Game game)
+        public Tuple<PlayerActions, Player, ICard> PerformPlayerAction(Player player, GameplayEvent gameplayEvent, IEnumerable<PlayerActions> availableActions, Game game)
         {
-            return new Tuple<PlayerActions, Player>(availableActions.First(), null);
+            var playerToAttack = StrategyHelpers.ChooseRandomPlayer(player, game);
+            return new Tuple<PlayerActions, Player, ICard>(availableActions.First(), playerToAttack, null);
         }
 
         public Tuple<LootActions, ICard> LootPlayerAction(Player player, GameplayEvent gameplayEvent, IEnumerable<LootActions> availableActions, Game game, Player killedPlayer)

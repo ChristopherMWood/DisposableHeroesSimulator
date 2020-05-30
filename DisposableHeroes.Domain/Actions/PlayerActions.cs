@@ -2,7 +2,10 @@
 {
     public enum PlayerActions
     {
-        ChoosePlayerToStrengthAttack,
-        ChoosePlayerToPerceptionAttack
+        StrengthAttack,
+        PerceptionAttack,
+        Heal,
+        RollForCard,
+        DoNothing
     }
 }

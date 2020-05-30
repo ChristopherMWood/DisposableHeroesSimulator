@@ -6,7 +6,6 @@ namespace DisposableHeroes.Domain.Dice
     {
         public int Roll()
         {
-            var random = new Random();
             return Random.Next(1, 7);
         }
     }
