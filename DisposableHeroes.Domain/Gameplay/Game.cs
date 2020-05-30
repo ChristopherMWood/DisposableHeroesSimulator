@@ -185,7 +185,7 @@ namespace DisposableHeroes.Gameplay
         private BasicActions ResolveDrawCardForPlayer(Player player)
         {
             var availablePlayerOptions = new List<BasicActions>();
-            var diceRoll = new SixSidedDice().Roll();
+            var diceRoll = SixSidedDice.Roll();
 
             if (diceRoll < 3)
             {
@@ -296,6 +296,7 @@ namespace DisposableHeroes.Gameplay
 
         public void StrengthAttackPlayer(Player attackingPlayer, Player defendingPlayer)
         {
+            State = GameState.InProgress;
             var attacking = true;
 
             while (attacking)
@@ -305,7 +306,7 @@ namespace DisposableHeroes.Gameplay
 
                 if (attackingPlayerRoll > defendingPlayerRoll)
                 {
-                    var attackDamage = new TwoSixSidedDice().Roll();
+                    var attackDamage = TwoSixSidedDice.Roll();
                     var bouncedAttackDamage = 0;
 
                     if (attackingPlayer.Weapon != null)
@@ -371,15 +372,15 @@ namespace DisposableHeroes.Gameplay
         {
             if (skillLevel < GameConstants.MinimumSkillForBetterDice)
             {
-                return new SixSidedDice().Roll();
+                return SixSidedDice.Roll();
             }
             else if (skillLevel < GameConstants.MinimumSkillForBestDice)
             {
-                return new TwoSixSidedDice().Roll();
+                return TwoSixSidedDice.Roll();
             }
             else
             {
-                return new TwentySidedDice().Roll();
+                return TwentySidedDice.Roll();
             }
         }
 

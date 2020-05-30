@@ -2,16 +2,10 @@
 {
     public enum CardActions
     {
-        DrawHeadCard,
-        DrawArmsCard,
-        DrawTorsoCard,
-        DrawLegsCard,
-        DrawWeaponCard,
-        DrawSpecialCard,
         EquiptCard,
         UnequipCard,
-        StoreCardInBackpack,
         DiscardCard,
+        StoreCardInBackpack,
         EquiptCardFromBackpack,
         DoNothing
     }

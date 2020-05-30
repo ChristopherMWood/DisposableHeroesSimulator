@@ -7,7 +7,7 @@ namespace DisposableHeroes.Domain.Gameplay
 {
     public class CardDeck<T> where T: ICard
     {
-        private Stack<T> deck = new Stack<T>();
+        private readonly Stack<T> deck = new Stack<T>();
 
         public CardDeck()
         {

@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DisposableHeroes.Domain.Players.Strategies
+namespace DisposableHeroes.Domain.Players.Strategies.CustomStrategies
 {
-    public class StrengthStrategy : IPlayerStrategy
+    public class TianyuCustomStrategy : IPlayerStrategy
     {
         public BasicActions PerformAction(Player player, GameplayEvent gameplayEvent, IEnumerable<BasicActions> availableActions, Game game)
         {
@@ -17,18 +17,17 @@ namespace DisposableHeroes.Domain.Players.Strategies
 
         public Tuple<CardActions, ICard> PerformCardAction(Player player, GameplayEvent gameplayEvent, IEnumerable<CardActions> availableActions, Game game, ICard card = null)
         {
-            return new Tuple<CardActions, ICard>(availableActions.First(), null);
+            return new Tuple<CardActions, ICard>(CardActions.DoNothing, null);
         }
 
         public Tuple<PlayerActions, Player, ICard> PerformPlayerAction(Player player, GameplayEvent gameplayEvent, IEnumerable<PlayerActions> availableActions, Game game)
         {
-            var playerToAttack = StrategyHelpers.ChooseRandomPlayer(player, game);
-            return new Tuple<PlayerActions, Player, ICard>(availableActions.First(), playerToAttack, null);
+            return new Tuple<PlayerActions, Player, ICard>(PlayerActions.DoNothing, null, null);
         }
 
         public Tuple<LootActions, ICard> LootPlayerAction(Player player, GameplayEvent gameplayEvent, IEnumerable<LootActions> availableActions, Game game, Player killedPlayer)
         {
-            return new Tuple<LootActions, ICard>(availableActions.First(), null);
+            return new Tuple<LootActions, ICard>(LootActions.DoNothing, null);
         }
     }
 }
