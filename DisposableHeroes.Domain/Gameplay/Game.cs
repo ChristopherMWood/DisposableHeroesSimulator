@@ -103,6 +103,11 @@ namespace DisposableHeroes.Gameplay
                             if (unequiptCard != null)
                             {
                                 DiscardDeck.AddToDeck(unequiptCard);
+
+                                if (!(unequiptCard is SpecialCard) && !(unequiptCard is WeaponCard))
+                                {
+                                    player.Health -= GameConstants.DamageFromPlayerRemovingBodyPart;
+                                }
                             }
                         }
                         break;
@@ -117,17 +122,42 @@ namespace DisposableHeroes.Gameplay
                 //TODO !!!: Might be able to reduce the condition in `if'
                 if (Players.Count(p => p.Health > 0) > 1)
                 {
-                    var availablePlayerOptions = new List<BasicActions>()
+                    var availablePlayerOptions = new List<PlayerActions>()
                     {
-                        BasicActions.StrengthAttack,
-                        BasicActions.PerceptionAttack,
-                        BasicActions.Heal,
-                        BasicActions.RollForCard,
-                        BasicActions.DoNothing
+                        PlayerActions.StrengthAttack,
+                        PlayerActions.PerceptionAttack,
+                        PlayerActions.Heal,
+                        PlayerActions.RollForCard,
+                        PlayerActions.DoNothing
                     };
 
-                    var action = player.PerformAction(GameplayEvent.AttackPhase, availablePlayerOptions, this);
-                    PerformAttackPhaseAction(action, player);
+                    var playerAction = player.PerformPlayerAction(GameplayEvent.AttackPhase, availablePlayerOptions, this);
+                    var enemySelected = playerAction.Item2 != null;
+
+                    switch (playerAction.Item1)
+                    {
+                        case PlayerActions.StrengthAttack:
+                            if (enemySelected)
+                            {
+                                StrengthAttackPlayer(player, playerAction.Item2);
+                            }
+                            break;
+                        case PlayerActions.PerceptionAttack:
+                            var cardTargeted = playerAction.Item3 != null;
+
+                            if (enemySelected && cardTargeted)
+                            {
+                                PerceptionAttackPlayer(player, playerAction.Item2, playerAction.Item3);
+                            }
+                            break;
+                        case PlayerActions.Heal:
+                            player.Health += GameConstants.AttackPhaseHealthGain;
+                            break;
+                        case PlayerActions.RollForCard:
+                            var drawCardAction = ResolveDrawCardForPlayer(player);
+                            PerformDrawCardActionPhaseAction(drawCardAction, player); //TODO: Needs to be replaced with simpler call
+                            break;
+                    }
                 }
             });
 
@@ -209,6 +239,8 @@ namespace DisposableHeroes.Gameplay
                     break;
             }
 
+            //Console.WriteLine(card.PrintReadable());
+
             var drawnCardAction = player.PerformCardAction(GameplayEvent.CardDrawn, availablePlayerOptions, this, card);
 
             if (drawnCardAction.Item1 == CardActions.EquiptCard)
@@ -253,27 +285,6 @@ namespace DisposableHeroes.Gameplay
             {
                 DeadPlayers.AddLast(deadPlayer);
                 Players.Remove(deadPlayer);
-            }
-        }
-
-        public void PerformAttackPhaseAction(BasicActions action, Player player)
-        {
-            switch (action)
-            {
-                case BasicActions.StrengthAttack:
-                    var playerToAttack = GetRandomPlayerToAttack(player);
-                    StrengthAttackPlayer(player, playerToAttack);
-                    break;
-                case BasicActions.PerceptionAttack:
-                    //TODO: Implement
-                    break;
-                case BasicActions.Heal:
-                    player.Health += GameConstants.AttackPhaseHealthGain;
-                    break;
-                case BasicActions.RollForCard:
-                     var drawCardAction = ResolveDrawCardForPlayer(player);
-                    PerformDrawCardActionPhaseAction(drawCardAction, player); //TODO: Needs to be replaced with simpler call
-                    break;
             }
         }
 
@@ -334,6 +345,24 @@ namespace DisposableHeroes.Gameplay
                         defendingPlayer.Health -= attackingPlayer.Weapon.Damage;
                     }
                     break;
+                }
+            }
+        }
+
+        public void PerceptionAttackPlayer(Player attackingPlayer, Player defendingPlayer, ICard targetedCard)
+        {
+            var attackingPlayerRoll = RollDiceForSkill(attackingPlayer.Strength);
+            var defendingPlayerRoll = RollDiceForSkill(defendingPlayer.Agility);
+
+            if (attackingPlayerRoll > defendingPlayerRoll)
+            {
+                //TODO: Need to implement unequipt from backpack when those rules are determined
+                var unequiptCard = defendingPlayer.UnequiptCard(targetedCard);
+
+                if (unequiptCard != null)
+                {
+                    DiscardDeck.AddToDeck(unequiptCard);
+                    defendingPlayer.Health -= GameConstants.SuccessfulPerceptionAttackDamage;
                 }
             }
         }

@@ -4,6 +4,8 @@
     {
         #region Gameplay Constants
         public const int AttackPhaseHealthGain = 4;
+        public const int SuccessfulPerceptionAttackDamage = 2;
+        public const int DamageFromPlayerRemovingBodyPart = 2;
         public const int MinimumNumberOfPlayersRequiredForBuildPhase = 3;
         public const bool DealSpecialCardsOnFirstRound = true;
         public const bool SetStartingPlayerAsOneWithLowestHealth = true;

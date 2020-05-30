@@ -3,8 +3,6 @@
     public enum BasicActions
     {
         DoNothing,
-        Heal,
-        RollForCard,
         DrawHeadCard,
         DrawArmsCard,
         DrawTorsoCard,
@@ -16,8 +14,6 @@
         RemoveTorso,
         RemoveLegs,
         RemoveWeapon,
-        RemoveSpecial,
-        StrengthAttack,
-        PerceptionAttack
+        RemoveSpecial
     }
 }
