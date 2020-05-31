@@ -1,5 +1,6 @@
 ﻿using DisposableHeroes.Domain.Gameplay;
 using DisposableHeroes.Domain.Players;
+using DisposableHeroes.Domain.Players.Strategies.CustomStrategies;
 using DisposableHeroes.Domain.Players.Strategies.GenericStrategies;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,14 @@ namespace DisposableHeroes
                 var players = new List<Player>()
                 {
                     new Player("Player 1", new StrengthStrategy()),
-                    new Player("Player 2", new HealerStrategy()),
-                    new Player("Player 3", new PrimitiveStrategy())
+                    new Player("Player 2", new StrengthStrategy()),
+                    //new Player("Player 2", new HealerStrategy()),
+                    new Player("Player 3", new RandomStrategy()),
+                    new Player("Player 4", new RandomStrategy()),
+                    //new Player("Player 4", new BuddyCustomStrategy())
+
                 };
-                var gameSummary = GameSimulator.SimulateGame(players, players[0]);
+                var gameSummary = GameSimulator.SimulateGame(players);
 
                 if (gameSummary == null)
                     continue;

@@ -9,12 +9,12 @@ namespace DisposableHeroes.Domain.Gameplay
 {
     public static class GameSimulator
     {
-        public static GameSummary SimulateGame(List<Players.Player> players, Players.Player startingPlayer)
+        public static GameSummary SimulateGame(List<Players.Player> players)
         {
             var game = new Game(players);
             var round = 0;
 
-            game.SetStartingPlayer(startingPlayer);
+            game.SetStartingPlayer(players.First());
 
             game.HeadsDeck.AddToDeck(PresetCards.AllHeadCards());
             game.ArmsDeck.AddToDeck(PresetCards.AllArmsCards());
@@ -46,6 +46,8 @@ namespace DisposableHeroes.Domain.Gameplay
 
                 if (GameConstants.SetStartingPlayerAsOneWithLowestHealth)
                     game.SetStartingPlayerAsOneWithLowestHealth();
+                else
+                    game.SetStartingPlayer(players);
             }
 
             return new GameSummary()

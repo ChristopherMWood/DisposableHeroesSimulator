@@ -113,7 +113,7 @@ namespace DisposableHeroes.Domain.Players
             }
         }
 
-        public ICard EquiptCard(ICard card)
+        public ICard EquiptCard(ICard card, bool testRun = false)
         {
             if (card == null)
                 return null;
@@ -129,7 +129,9 @@ namespace DisposableHeroes.Domain.Players
             {
                 previouslyEquiptCard = Torso;
                 Torso = card as TorsoCard;
-                Health += Torso.HealthBoost;
+
+                if (!testRun)
+                    Health += Torso.HealthBoost;
             }
             else if (card is ArmsCard)
             {

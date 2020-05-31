@@ -45,7 +45,22 @@ namespace DisposableHeroes.Gameplay
 
         public void SetStartingPlayer(Player player)
         {
-            CurrentPlayer = player;
+            if (player != null)
+            {
+                CurrentPlayer = player;
+            }
+        }
+
+        public void SetStartingPlayer(List<Player> players)
+        {
+            foreach (var player in players)
+            {
+                if (player.Health > 0)
+                {
+                    CurrentPlayer = player;
+                    break;
+                }
+            }
         }
 
         public void GiveAllPlayersSpecialCard()

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DisposableHeroes.Domain.Players.Strategies.GenericStrategies
 {
-    public class PrimitiveStrategy : IPlayerStrategy
+    public class DefensiveStrategy : IPlayerStrategy
     {
         public BasicActions PerformAction(Player player, GameplayEvent gameplayEvent, IEnumerable<BasicActions> availableActions, Game game)
         {
