@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DisposableHeroes.Domain.Players.Strategies.GenericStrategies
 {
-    public class StrengthStrategy : IPlayerStrategy
+    public class RevengeStrategy : IPlayerStrategy
     {
         public BasicActions PerformAction(Player player, GameplayEvent gameplayEvent, IEnumerable<BasicActions> availableActions, Game game)
         {
@@ -22,14 +22,8 @@ namespace DisposableHeroes.Domain.Players.Strategies.GenericStrategies
 
         public Tuple<PlayerActions, Player, ICard> PerformPlayerAction(Player player, GameplayEvent gameplayEvent, IEnumerable<PlayerActions> availableActions, Game game)
         {
-            if (availableActions.Contains(PlayerActions.StrengthAttack))
-            {
-                var targetedPlayer = StrategyHelpers.ChooseRandomPlayer(player, game);
-
-                return new Tuple<PlayerActions, Player, ICard>(PlayerActions.StrengthAttack, targetedPlayer, null);
-            }
-
-            return new Tuple<PlayerActions, Player, ICard>(availableActions.First(), null, null);
+            var playerToAttack = StrategyHelpers.ChooseRandomPlayer(player, game);
+            return new Tuple<PlayerActions, Player, ICard>(availableActions.First(), playerToAttack, null);
         }
 
         public Tuple<LootActions, ICard> LootPlayerAction(Player player, GameplayEvent gameplayEvent, IEnumerable<LootActions> availableActions, Game game, Player killedPlayer)
