@@ -7,6 +7,7 @@
         DiscardCard,
         StoreCardInBackpack,
         EquiptCardFromBackpack,
+        PlaySpecialCard,
         DoNothing
     }
 }

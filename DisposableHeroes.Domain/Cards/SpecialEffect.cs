@@ -9,6 +9,7 @@
         BoostStats,
         SplashDamageOnSuccessfulAttacks,
         GainHealthOnceByFive,
-        GainHealthEveryRoundByTwo
+        GainHealthEveryRoundByTwo,
+        None
     }
 }
